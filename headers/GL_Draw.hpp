@@ -1,0 +1,148 @@
+#include <vector>
+
+namespace GLS
+{
+	class Drawer
+	{
+	private:
+		VAO vao;
+		VBO vbo;
+		EBO ebo;
+		unsigned int indices;
+
+		void object_init(unsigned int vs, float*v, unsigned int is, unsigned int*i, unsigned int t);
+	public:
+		glm::vec3 position = glm::vec3(0);
+		glm::vec3 scale = glm::vec3(1);
+		glm::mat4 rotation = glm::mat4(1);
+		glm::mat4 model;
+
+		Drawer(MODEL model, unsigned int draw_type);
+		Drawer(unsigned int vertices_size, float *vertices,unsigned int indices_size, unsigned int* indices,unsigned int draw_type);
+		Drawer(unsigned int vertices_size, float *vertices,unsigned int indices_size, unsigned int* indices,unsigned int draw_type, 
+			std::vector<unsigned int> each_size);
+		Drawer(unsigned int vertices_size, float *vertices,unsigned int indices_size, unsigned int* indices,unsigned int draw_type, 
+			unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem);
+
+		void shader_model(unsigned int shader_model_loc);
+		void drawTriangle();
+		void drawElements();
+		
+		void modelRefresh();
+		
+		glm::vec3 getFront();
+		glm::vec3 getRight();
+
+		void rotateRelative(glm::vec3 theline, float angle);
+	};
+}
+
+
+
+
+namespace GLS
+{
+	void Drawer::object_init(unsigned int v_size, float*ver, unsigned int i_size, unsigned int*ind, unsigned int type)
+	{
+		vao.bind();
+		vbo.data(v_size,ver,type);
+		ebo.data(i_size,ind,type);
+	}
+
+	Drawer::Drawer(unsigned int v_size, float*ver, unsigned int i_size, unsigned int*ind, unsigned int type) :
+		vao(), vbo(), ebo()
+	{
+		object_init(v_size,ver,i_size,ind,type);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+
+		indices = i_size/sizeof(unsigned int);
+	}
+
+	Drawer::Drawer(unsigned int v_size, float*ver, unsigned int i_size, unsigned int*ind, unsigned int type, std::vector<unsigned int> each_size) :
+		vao(), vbo(), ebo()
+	{
+		object_init(v_size,ver,i_size,ind,type);
+
+		unsigned int sumofthem = 0;
+		for (unsigned int i = 0;i<each_size.size();i++) sumofthem += each_size[i];
+
+		unsigned int offset = 0;
+		for(unsigned int i = 0;i<each_size.size();i++)
+		{
+			glVertexAttribPointer(i, each_size[i], GL_FLOAT, GL_FALSE, sumofthem * sizeof(float), (void*)(offset));
+			glEnableVertexAttribArray(i);
+			offset+=each_size[i]*sizeof(float);
+		}
+
+		indices = i_size/sizeof(unsigned int);
+	}
+
+	Drawer::Drawer(unsigned int v_size, float*ver, unsigned int i_size, unsigned int*ind, unsigned int type, 
+		unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem=0)
+	{
+		object_init(v_size,ver,i_size,ind,type);
+
+
+		unsigned int count = each_size_size/sizeof(unsigned int);
+		if(sumofthem == 0) for (unsigned int i = 0;i<count;i++) sumofthem += each_size[i];
+
+		unsigned int offset = 0;
+		for(unsigned int i = 0;i<count;i++)
+		{
+			glVertexAttribPointer(i, each_size[i], GL_FLOAT, GL_FALSE, sumofthem * sizeof(float), (void*)(offset));
+			glEnableVertexAttribArray(i);
+			offset+=each_size[i]*sizeof(float);
+		}
+
+		indices = i_size/sizeof(unsigned int);
+	}
+
+	Drawer::Drawer(MODEL model, unsigned int draw_type)
+	{
+		object_init(model.vertice_size,model.vertices,model.indice_size,model.indices,draw_type);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(0);
+
+		indices = model.indice_size/sizeof(unsigned int);
+	}
+
+	void Drawer::drawElements()
+	{
+		vao.bind();
+		glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, 0);
+	}
+
+	void Drawer::shader_model(unsigned int model_location) // User should use the shader before function
+	{
+		glUniformMatrix4fv(model_location,1,GL_FALSE,glm::value_ptr(model));
+	}
+
+	void Drawer::modelRefresh()
+	{
+		glm::mat4 rot = rotation * glm::mat4(1);
+		glm::mat4 trans = glm::translate(glm::mat4(1),position);
+		glm::mat4 scal = glm::scale(glm::mat4(1),scale);
+		model = trans * scal * rot;
+	}
+
+	glm::vec3 Drawer::getFront()
+	{
+		glm::vec4 r = (rotation * glm::vec4(0.0f,0.0f,1.0f,1.0f));
+		return glm::vec3(r.x,r.y,r.z);
+	}
+
+	glm::vec3 Drawer::getRight()
+	{
+		glm::vec4 r = (rotation * glm::vec4(-1.0f,0.0f,0.0f,1.0f));
+		return glm::vec3(r.x,r.y,r.z);
+	}
+
+	void Drawer::rotateRelative(glm::vec3 t, float angle)
+	{
+		glm::vec4 th = rotation * glm::vec4(t.x,t.y,t.z,1.0f);
+		rotation = glm::rotate(rotation, angle, glm::vec3(t.x,t.y,t.z));
+	}
+}
