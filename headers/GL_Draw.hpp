@@ -17,12 +17,13 @@ namespace GLS
 		glm::mat4 rotation = glm::mat4(1);
 		glm::mat4 model;
 
+		Drawer();
 		Drawer(MODEL model, unsigned int draw_type);
-		Drawer(unsigned int vertices_size, float *vertices,unsigned int indices_size, unsigned int* indices,unsigned int draw_type);
-		Drawer(unsigned int vertices_size, float *vertices,unsigned int indices_size, unsigned int* indices,unsigned int draw_type, 
-			std::vector<unsigned int> each_size);
-		Drawer(unsigned int vertices_size, float *vertices,unsigned int indices_size, unsigned int* indices,unsigned int draw_type, 
-			unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem);
+		Drawer(MODEL model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem);
+		
+		void init_buffers(MODEL model, unsigned int draw_type);
+		void init_buffers(MODEL model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem);
+		
 
 		void shader_model(unsigned int shader_model_loc);
 		void drawTriangle();
@@ -49,41 +50,26 @@ namespace GLS
 		ebo.data(i_size,ind,type);
 	}
 
-	Drawer::Drawer(unsigned int v_size, float*ver, unsigned int i_size, unsigned int*ind, unsigned int type) :
-		vao(), vbo(), ebo()
+	Drawer::Drawer() {}
+
+	Drawer::Drawer(MODEL model, unsigned int draw_type) { init_buffers(model,draw_type); }
+
+	Drawer::Drawer(MODEL model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem=0) 
+	{ init_buffers(model,draw_type,each_size_size,each_size,sumofthem); }
+
+	void Drawer::init_buffers(MODEL model, unsigned int draw_type)
 	{
-		object_init(v_size,ver,i_size,ind,type);
+		object_init(model.vertice_size,model.vertices,model.indice_size,model.indices,draw_type);
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
 
-		indices = i_size/sizeof(unsigned int);
+		indices = model.indice_size/sizeof(unsigned int);
 	}
 
-	Drawer::Drawer(unsigned int v_size, float*ver, unsigned int i_size, unsigned int*ind, unsigned int type, std::vector<unsigned int> each_size) :
-		vao(), vbo(), ebo()
+	void Drawer::init_buffers(MODEL model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem=0)
 	{
-		object_init(v_size,ver,i_size,ind,type);
-
-		unsigned int sumofthem = 0;
-		for (unsigned int i = 0;i<each_size.size();i++) sumofthem += each_size[i];
-
-		unsigned int offset = 0;
-		for(unsigned int i = 0;i<each_size.size();i++)
-		{
-			glVertexAttribPointer(i, each_size[i], GL_FLOAT, GL_FALSE, sumofthem * sizeof(float), (void*)(offset));
-			glEnableVertexAttribArray(i);
-			offset+=each_size[i]*sizeof(float);
-		}
-
-		indices = i_size/sizeof(unsigned int);
-	}
-
-	Drawer::Drawer(unsigned int v_size, float*ver, unsigned int i_size, unsigned int*ind, unsigned int type, 
-		unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem=0)
-	{
-		object_init(v_size,ver,i_size,ind,type);
-
+		object_init(model.vertice_size,model.vertices,model.indice_size,model.indices,draw_type);
 
 		unsigned int count = each_size_size/sizeof(unsigned int);
 		if(sumofthem == 0) for (unsigned int i = 0;i<count;i++) sumofthem += each_size[i];
@@ -95,16 +81,6 @@ namespace GLS
 			glEnableVertexAttribArray(i);
 			offset+=each_size[i]*sizeof(float);
 		}
-
-		indices = i_size/sizeof(unsigned int);
-	}
-
-	Drawer::Drawer(MODEL model, unsigned int draw_type)
-	{
-		object_init(model.vertice_size,model.vertices,model.indice_size,model.indices,draw_type);
-
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(0);
 
 		indices = model.indice_size/sizeof(unsigned int);
 	}

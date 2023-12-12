@@ -15,6 +15,7 @@ public:
 		this->drawer = drawer_ptr;
 		this->world_physics = world_physics;
 	}
+
 	void update(float deltaTime,float min_height)
 	{
 		drawer->position += speed*deltaTime;

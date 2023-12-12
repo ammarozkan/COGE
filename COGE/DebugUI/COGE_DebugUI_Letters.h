@@ -65,7 +65,7 @@ namespace COGE
 	GLS::Drawer* get_A()
 	{
 		unsigned int each_size[] = {2};
-		return new GLS::Drawer(sizeof(A_vertices), A_vertices,sizeof(A_indices), A_indices,GL_STATIC_DRAW, 
-			sizeof(each_size), each_size, 2);
+		GLS::MODEL letter_model(sizeof(A_vertices), A_vertices,sizeof(A_indices), A_indices);
+		return new GLS::Drawer(letter_model,GL_STATIC_DRAW, sizeof(each_size), each_size, 2);
 	}
 }

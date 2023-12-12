@@ -46,6 +46,9 @@ namespace COGE
 		void init_objects();
 		void init_controllers();
 		void init_UI();
+
+		void mainThread_init();
+		void threaded_init();
 		void init();
 		void initializing(); // Screen Loop
 
@@ -54,15 +57,16 @@ namespace COGE
 		void Work();
 		void inStart();
 		void inLoop(float deltaTime); 
-		// I'm going to define here a loop_th1 and loop_th2 or more for speed. and then loop_th_final for finalizing.
-		// and then the threads will came out
-		//void loop_th1(float deltaTime); void loop_th2(float deltaTime); void loop_th_final(float deltaTime);
+		// I need smth like loop_reader here for threaded file read stuff. So I can read files free from "working"
+		// Just need to pass the data loop to loop_reader vice versa.
 
 		void Controls(float deltaTime);
 		void Draw();
 		void Draw_low();
 		void Draw_UI();
 		void OncePrint(float deltaTime);
+
+		~Engine();
 
 	};
 }
@@ -168,7 +172,6 @@ void COGE::Engine::Draw()
 
 	glUniformMatrix4fv(generalShader->view, 1, GL_FALSE, glm::value_ptr(camera.getView()));
 	glUniformMatrix4fv(generalShader->projection, 1, GL_FALSE, glm::value_ptr(full_projection));
-
 
 	glUniform3f(xEffect, 0.0f, 0.0f, 0.0f);
 	glUniform3f(yEffect, 0.0f, 0.0f, 0.0f);

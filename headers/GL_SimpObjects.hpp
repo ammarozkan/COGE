@@ -15,6 +15,7 @@ namespace GLS
 
 	public:
 		VAO();
+		~VAO();
 		void bind();
 	};
 
@@ -28,6 +29,7 @@ namespace GLS
 
 	public:
 		VBO();
+		~VBO();
 		void bind();
 		void data(unsigned int size, float*d, GLenum operation);
 	};
@@ -58,6 +60,11 @@ namespace GLS
 		glGenVertexArrays(1, &id);
 	}
 
+	VAO::~VAO()
+	{
+		glDeleteVertexArrays(1, &id);
+	}
+
 	void VAO::bind()
 	{
 		glBindVertexArray(id);
@@ -65,10 +72,9 @@ namespace GLS
 
 
 
-	VBO::VBO()
-	{
-		glGenBuffers(1,&id);
-	}
+	VBO::VBO() { glGenBuffers(1,&id); }
+
+	VBO::~VBO() { glDeleteBuffers(1,&id); }
 
 	void VBO::bind()
 	{

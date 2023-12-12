@@ -12,6 +12,24 @@ private:
 	}
 	
 public:
+	GLS::Drawer* terrain;
+
+	GLS::MODEL* terrain_model;
+
+	GAME_Terrain()
+	{
+		terrain = new GLS::Drawer();
+		terrain_model = new GLS::MODEL;
+	}
+
+	~GAME_Terrain()
+	{
+		//delete terrain; // idk why but when I uncomment this line, terrain doesn't show up. :/
+
+		free(terrain_model->vertices); free(terrain_model->indices);
+		delete terrain_model;
+	}
+
 	float heightFunction(float x, float y)
 	{
 		float xs = automation(20,x)/10.0f;
@@ -19,14 +37,13 @@ public:
 		return xs + ys - 0.5f;
 	}
 
-	GLS::Drawer* terrain;
-	GAME_Terrain(int x, int y)
+	void generate(int x, int y)
 	{
-		unsigned int vertices_size = sizeof(float) * 3 * x * y,
-					indice_size = sizeof(unsigned int) * (x-1) * (y-1) * 2 * 3;
+		terrain_model->vertice_size = sizeof(float) * 3 * x * y;
+		terrain_model->indice_size = sizeof(unsigned int) * (x-1) * (y-1) * 2 * 3;
 
-		float* vertices = (float*)malloc(vertices_size);
-		unsigned int* indices = (unsigned int*)malloc(indice_size);
+		terrain_model->vertices = (float*)malloc(terrain_model->vertice_size);
+		terrain_model->indices = (unsigned int*)malloc(terrain_model->indice_size);
 
 		float dx = 2.0f/x, dy = 2.0f/y;
 
@@ -36,9 +53,9 @@ public:
 		{
 			for(unsigned int iX = 0;iX<x;iX++)
 			{
-				vertices[iY*x*3 + iX*3 + 0] = dx*iX - 1.0f;
-				vertices[iY*x*3 + iX*3 + 1] = heightFunction(dx*iX - 1.0f, dy*iY - 1.0f);
-				vertices[iY*x*3 + iX*3 + 2] = dy*iY - 1.0f;
+				terrain_model->vertices[iY*x*3 + iX*3 + 0] = dx*iX - 1.0f;
+				terrain_model->vertices[iY*x*3 + iX*3 + 1] = heightFunction(dx*iX - 1.0f, dy*iY - 1.0f);
+				terrain_model->vertices[iY*x*3 + iX*3 + 2] = dy*iY - 1.0f;
 			}
 		}
 
@@ -51,19 +68,21 @@ public:
 			for(unsigned int iX = 0;iX<x-2;iX++)
 			{
 				unsigned int point = iY*x + iX;
-				indices[counter++] = point;
-				indices[counter++] = point + 1;
-				indices[counter++] = point + x;
+				terrain_model->indices[counter++] = point;
+				terrain_model->indices[counter++] = point + 1;
+				terrain_model->indices[counter++] = point + x;
 
 
-				indices[counter++] = point + x + 1;
-				indices[counter++] = point + 1;
-				indices[counter++] = point + x;
+				terrain_model->indices[counter++] = point + x + 1;
+				terrain_model->indices[counter++] = point + 1;
+				terrain_model->indices[counter++] = point + x;
 			}
 		}
-
-		terrain = new GLS::Drawer(vertices_size, vertices,indice_size, indices,GL_STATIC_DRAW);
 		terrain->scale = glm::vec3(50.0f,1.0f,50.0f);
+	}
+
+	void init_drawer() { 
+		terrain->init_buffers(*terrain_model, GL_STATIC_DRAW);
 	}
 
 	void draw(GLS::ShaderProgram shader,unsigned int xyzEffect[3])

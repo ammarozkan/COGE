@@ -1,18 +1,13 @@
-
 #include "cmakeincluder.h"
-
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 /// spell coge like koj. prend le mat comme en francais
 
 #define WIDTH 1280
 #define HEIGHT 720
 
-#define COGE_DONT_FILE_LOG
-#define COGE_EDITOR
+//#define COGE_DONT_FILE_LOG
+//#define COGE_EDITOR
 #define COGE_EXTREME_LOG
-
 
 //#define COGE_PACK
 //#define COGE_UNPACK
@@ -41,6 +36,7 @@ int main()
 	test_pack.addShaderData_fromFile("defaultshader", "defaultshader.glsl");
 	test_pack.addShaderData_fromFile("generalshader", "generalshader.glsl");
 	test_pack.addShaderData_fromFile("uishader", "uishader.glsl");
+	test_pack.addShaderData_fromFile("test_loading_shader", "test_loading_shader.glsl");
 	test_pack.addModelData("model_plane", COGE::MODEL_Plane());
 	test_pack.addModelData("model_tree_grass", COGE::MODEL_TreeGrass());
 	test_pack.addModelData("model_tree_wood", COGE::MODEL_TreeWood());

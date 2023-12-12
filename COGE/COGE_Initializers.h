@@ -1,13 +1,13 @@
 void COGE::Engine::init_files()
 {
 	LOG("FILE INITIALIZATION");
+	data_reader.addFile("packages/early_package.COGE");
 	// this file includes
 			// generalshader.glsl
 			// defaultshader.glsl
 			// testshader.glsl
 			// uishader.glsl
-			// model_plane
-	data_reader.addFile("packages/early_package.COGE");
+			// model_planed
 }
 
 void COGE::Engine::init_shaders()
@@ -16,8 +16,6 @@ void COGE::Engine::init_shaders()
 	GLS::ShaderText general_shader_data = data_reader.read_shader("generalshader");
 	generalShader = new GLS::ShaderProgram(general_shader_data.vertex.c_str(),general_shader_data.fragment.c_str());
 
-	E_LOG(general_shader_data.vertex);
-	E_LOG(general_shader_data.fragment);
 	generalShader->use();
 	generalShader->initGenericUniforms();
 	xEffect = generalShader->UniformLocation("xEffect");
@@ -52,23 +50,29 @@ void COGE::Engine::init_controllers()
 void COGE::Engine::init_terrain()
 {
 	LOG("TERRAIN INITIALIZATION");
+	terrain.generate(1000,1000);
+	low_terrain.generate(50,50);
+
 	terrain.terrain->scale = glm::vec3(2500.0f*5.0f,100.0f,2500.0f*5.0f);
 	terrain.terrain->position = glm::vec3(0.0f,-50.0f,0.0f);
 	low_terrain.terrain->scale = glm::vec3(2500.0f*5.0f,100.0f,2500.0f*5.0f);
 	low_terrain.terrain->position = glm::vec3(0.0f,-50.0f,0.0f);
-
-	GLS::MODEL model_TreeGrass = data_reader.read_model("model_tree_grass"),
-		model_TreeWood = data_reader.read_model("model_tree_wood");
-	forests.push_back(GAME_Forest(1000, 100.0f, 100.0f, 650.0f, 0.0f, terrain,model_TreeGrass,model_TreeWood));
 }
 
 void COGE::Engine::init_objects()
 {
+	LOG("OBJECT(MODEL) INITIALIZATION");
 	GLS::MODEL plane = data_reader.read_model("model_plane");
-	LOG("OBJECT INITIALIZATION");
 	planes.push_back(GAME_Thing(new GLS::Drawer(plane, GL_STATIC_DRAW), &world));
 	planes.push_back(GAME_Thing(new GLS::Drawer(plane, GL_STATIC_DRAW), &world));
 	planes.push_back(GAME_Thing(new GLS::Drawer(plane, GL_STATIC_DRAW), &world));
+
+	terrain.init_drawer();
+	low_terrain.init_drawer();
+
+	GLS::MODEL model_TreeGrass = data_reader.read_model("model_tree_grass"),
+		model_TreeWood = data_reader.read_model("model_tree_wood");
+	forests.push_back(GAME_Forest(1000, 100.0f, 100.0f, 650.0f, 0.0f, terrain,model_TreeGrass,model_TreeWood));
 }
 
 void COGE::Engine::init_UI()
@@ -77,20 +81,35 @@ void COGE::Engine::init_UI()
 	DebugText.position = glm::vec2(-WIDTH+5.0f,+HEIGHT-25.0f-10.0f);
 }
 
-void COGE::Engine::init()
+void COGE::Engine::threaded_init()
 {
-	init_files();
-	init_shaders();
-	init_projection();
 	init_terrain();
-	init_objects();
-	init_controllers();
+	init_projection();
 	init_UI();
 	loading = false;
 }
 
+void COGE::Engine::mainThread_init()
+{
+	init_shaders(); // That thing is can only be working on the main thread.
+	init_objects();
+	init_controllers();
+}
+
+void COGE::Engine::init()
+{
+	init_files(); // scanning files are really important.
+
+	loading = true;
+	std::thread th_init(&Engine::threaded_init,this);
+
+	initializing(); 
+	th_init.join();
+	mainThread_init();
+}
+
 COGE::Engine::Engine(GLFWwindow* window) :
-	terrain(1000,1000), low_terrain(50,50), DebugText("A",25.0f)
+	DebugText("A",25.0f)
 {
 	if(window == nullptr)
 	{
@@ -99,13 +118,12 @@ COGE::Engine::Engine(GLFWwindow* window) :
 	}
 	this->window = window;
 
-	loading = true;
-	//std::thread th_initializing(&Engine::initializing,this);
-
-	//initializing(); //th_initializing.join();
 	init();
+
 	// waiting for multi threaded initialization. in example for loading screen?
 }
+
+COGE::Engine::~Engine() {}
 
 void COGE::Engine::initializing()
 {
@@ -113,22 +131,42 @@ void COGE::Engine::initializing()
 	float preTime = 0.0f,printTimer=0.0f;
 
 	float triangle_vertices[] = {
-		 0.5f, -0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
+		 0.4f, -0.4f, 0.0f,
+		-0.4f, -0.4f, 0.0f,
 		 0.0f,  0.5f, 0.0f
 	};
 
 	unsigned int triangle_indices[] = {0,1,2};
 
-	GLS::Drawer triangle_that_spins(sizeof(triangle_vertices),triangle_vertices,sizeof(triangle_indices),triangle_indices,GL_STATIC_DRAW);
+	GLS::MODEL triangle_model(sizeof(triangle_vertices),triangle_vertices,sizeof(triangle_indices),triangle_indices);
 
-	while(!glfwWindowShouldClose(window) and loading)
+	GLS::Drawer triangle_that_spins(triangle_model,GL_STATIC_DRAW);
+	LOG("LOADING SCREEN.");
+	glm::mat4 loading_transform = glm::mat4(1.0f);
+
+	unsigned int UI_screen_size,UI_object_size,UI_position,UI_transform;
+	GLS::ShaderText test_shader_data = data_reader.read_shader("test_loading_shader");
+	GLS::ShaderProgram *TestShader = new GLS::ShaderProgram(test_shader_data.vertex.c_str(),test_shader_data.fragment.c_str());
+	TestShader->use();
+	UI_screen_size = TestShader->UniformLocation("screen_size");
+	UI_object_size = TestShader->UniformLocation("object_size");
+	UI_position = TestShader->UniformLocation("position");
+	UI_transform = TestShader->UniformLocation("transform");
+	glUniform2f(UI_screen_size, WIDTH, HEIGHT);
+
+	while(!glfwWindowShouldClose(window) && loading)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		deltaTime = glfwGetTime() - preTime;
 		preTime = glfwGetTime();
 
+		TestShader->use();
+		glUniform2f(UI_object_size, 25.0f, 25.0f);
+		glUniform2f(UI_position, WIDTH-50.0f, 50.0f);
+		loading_transform = glm::rotate(loading_transform, glm::radians(50.0f*deltaTime), glm::vec3(0.0f,0.0f,1.0f));
+		glUniformMatrix4fv(UI_transform, 1, GL_FALSE, glm::value_ptr(loading_transform));
+		// loading specific shader
 		triangle_that_spins.drawElements();
 
 		glfwSwapBuffers(window);

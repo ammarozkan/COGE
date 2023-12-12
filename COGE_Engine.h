@@ -1,4 +1,6 @@
-// #define instructions:
+// #define COGE_VULKAN -> this is a self explanatory defining. Yeah. implements vulkan.
+
+// customisation instructions:
 // #define COGE_EDITOR -> will let compiler to compiler editor special classes in example DataPackager
 // #define COGE_DONT_FILE_LOG -> this definition will prevent "file logging" to the file "coge_log.txt"
 // #define COGE_LOG_FILE_PATH "mylogpath/mylogfile.txt" -> compile master can change log path with this definition
@@ -10,6 +12,12 @@
 // #define COGE_DATA_EXTENSION -> with this, data extension can be changed
 // #define COGE_MERGE_STATIC_MODELS -> library not defaultly includes COGE_Models.h file. Only includes when that thing is defined.
 
+#ifndef COGE_VULKAN
+#include <GL/glew.h>
+#else
+#define GLFW_INCLUDE_VULKAN
+#endif
+#include <GLFW/glfw3.h>
 
 #include <iostream>
 #include <fstream>

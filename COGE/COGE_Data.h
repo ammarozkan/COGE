@@ -15,7 +15,7 @@ will came out. These 4 bytes shall tell size of the indices to the reader.
 So order is always important. Reader shall be capable of handling that.
 
 	For more standart model initializion, define of a vertex buffer
-will be: [aPos]vec3(3*float) + [TexCoord]vec2(2*float)
+will be: [aPos]vec3(3*float) + [TexCoord]vec2(2*float) + [BoneBind]vec1(1*float)
 
 
 COGE_SHADER
@@ -28,6 +28,13 @@ COGE_MAPPROP_EXPLANATOR
 	COGE puts the props of the map by that explanator. This explanator
 refers to position and the model of static props on the map. COGE just
 generates them by looking to player position.
+
+	The Standard : [Position]vec3(3*float) + [specs]byte(bruh)
+
+COGE_BONE_ANIMATION
+	COGE scans COGE_BONE_ANIMATION and creates an animation for bones.
+And creates matrixes for bones. Then uses shaders to move bone binded
+vertexes.
 */
 
 #ifdef COGE_EDITOR
@@ -193,8 +200,6 @@ GLS::MODEL COGE::DataReader::read_model(std::string name)
 		return GLS::MODEL(0,nullptr,0,nullptr);
 	}
 
-	LOG("DATA:"<<(char*)data);
-
 	unsigned int *vertice_size = (unsigned int*)data;
 	float* vertices = (float*)(data+sizeof(unsigned int));
 
@@ -212,7 +217,6 @@ GLS::ShaderText COGE::DataReader::read_shader(std::string name)
 	unsigned int size = 0;
 	for(unsigned int i = 0;i<shader_references.size();i++) 
 	{
-		E_LOG("CONTROLLING '" << shader_references[i].name << "'");
 		if(!name.compare(shader_references[i].name)) 
 		{
 			data = (char*)files[shader_references[i].file_id].read(shader_references[i]);

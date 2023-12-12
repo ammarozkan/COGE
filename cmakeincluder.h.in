@@ -1,0 +1,10 @@
+
+#define ThatCode_VERSION_MAJOR @TryingOpenGL_VERSION_MAJOR@
+#define ThatCode_VERSION_MINOR @TryingOpenGL_VERSION_MINOR@
+
+#include <iostream>
+
+void ThatCode_print_version()
+{
+	std::cout << ThatCode_VERSION_MAJOR << "." << ThatCode_VERSION_MAJOR << std::endl;
+}

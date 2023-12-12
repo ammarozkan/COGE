@@ -17,12 +17,12 @@ public:
 	void draw(GLS::ShaderProgram shader,unsigned int xyzEffect[3])
 	{
 		grass->modelRefresh();
+
 		grass->shader_model(shader.model);
 		glUniform3f(xyzEffect[0], 0.0f, 0.5f, 0.0f);
 		glUniform3f(xyzEffect[1], 0.0f, 1.0f, 0.0f);
 		glUniform3f(xyzEffect[2], 0.0f, 0.5f, 0.0f);
 		grass->drawElements();
-
 
 		glUniform3f(xyzEffect[0], 1.0f, 0.5f, 0.0f);
 		glUniform3f(xyzEffect[1], 1.0f, 0.5f, 0.0f);
@@ -56,6 +56,9 @@ public:
 
 	void draw(GLS::ShaderProgram shader, unsigned int xyzEffect[3])
 	{
-		for(unsigned int i = 0;i<trees.size();i++) trees[i].draw(shader, xyzEffect);
+		for(unsigned int i = 0;i<trees.size();i++)
+		{
+			trees[i].draw(shader, xyzEffect);
+		}
 	}
 };
