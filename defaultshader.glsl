@@ -5,7 +5,7 @@ out vec4 vertexColor;
 
 uniform mat4 model;
 uniform mat4 view;
-uniform mat+ projection;
+uniform mat4 projection;
 
 void main()
 {
