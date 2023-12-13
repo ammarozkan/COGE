@@ -6,3 +6,6 @@ Critical Oriented Game Engine
 - [x] Have a DebugUI without any letter files. Only vertices and indices summed together.
 - [x] Controller system with camera management.
 - [x] Terrain generator.
+- [x] Really basic water. Really basic. Don't expect too much.
+- [x] Thirdperson Controller
+- [x] Plane Controller
