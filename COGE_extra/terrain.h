@@ -12,19 +12,19 @@ private:
 	}
 	
 public:
-	GLS::Drawer* terrain;
+	GLS::Drawer* terrain_drawer; GLS::Object3D terrain_object;
 
 	GLS::MODEL* terrain_model;
 
 	GAME_Terrain()
 	{
-		terrain = new GLS::Drawer();
+		terrain_drawer = new GLS::Drawer();
 		terrain_model = new GLS::MODEL;
 	}
 
 	~GAME_Terrain()
 	{
-		//delete terrain; // idk why but when I uncomment this line, terrain doesn't show up. :/
+		//delete terrain_drawer; // idk why but when I uncomment this line, terrain doesn't show up. :/
 
 		free(terrain_model->vertices); free(terrain_model->indices);
 		delete terrain_model;
@@ -78,27 +78,28 @@ public:
 				terrain_model->indices[counter++] = point + x;
 			}
 		}
-		terrain->scale = glm::vec3(50.0f,1.0f,50.0f);
+		terrain_object.scale = glm::vec3(50.0f,1.0f,50.0f);
 	}
 
-	void init_drawer() { 
-		terrain->init_buffers(*terrain_model, GL_STATIC_DRAW);
+	void init_drawer() 
+	{ 
+		terrain_drawer->init_buffers(*terrain_model, GL_STATIC_DRAW);
 	}
 
-	void draw(GLS::ShaderProgram shader,unsigned int xyzEffect[3])
+	void draw(COGE::Shader3D shader,unsigned int xyzEffect[3])
 	{
-		terrain->modelRefresh();
-		terrain->shader_model(shader.model);
+		terrain_object.modelRefresh();
+		terrain_object.shader_model(shader.model);
 		glUniform3f(xyzEffect[0], 0.0f, 0.0f, 0.0f);
 		glUniform3f(xyzEffect[1], 0.0f, +1.0f, -0.7f);
 		glUniform3f(xyzEffect[2], 0.0f, 0.0f, 0.0f);
 		glUniform3f(shader.colorConstant, 0.5f, 0.0f, 0.0f);
 		glUniform1f(shader.colorConstant_effect, 0.0f);
-		terrain->drawElements();
+		terrain_drawer->drawElements();
 	}
 
 	float getHeight(float x, float y)
 	{
-		return heightFunction(x/terrain->scale.x,y/terrain->scale.z)*terrain->scale.y + terrain->position.y;
+		return heightFunction(x/terrain_object.scale.x,y/terrain_object.scale.z)*terrain_object.scale.y + terrain_object.position.y;
 	}
 };

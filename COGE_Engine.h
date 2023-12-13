@@ -95,6 +95,10 @@ void print(float t)
 	std::cout << "Float:" << t << std::endl;
 }
 
+#include "COGE/COGE_StandardShaders.h"
+
+#include "COGE_extra/generators.h"
+#include "COGE_extra/water.h"
 #include "COGE_extra/terrain.h"
 #include "COGE_extra/tree.h"
 #include "COGE_extra/things.h"
@@ -106,5 +110,6 @@ void print(float t)
 
 #include "COGE/COGE_DebugUI.h"
 #include "COGE/COGE_Data.h"
+
 
 #include "COGE/COGE_Core.h"

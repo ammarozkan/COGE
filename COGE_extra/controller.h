@@ -32,3 +32,5 @@ void EMPTY_KEY_FUNCTION(float deltaTime,GAME_Thing* object,void* data){}
 // PLANE CONTROLLER
 
 #include "Controllers/planecontroller.h"
+
+#include "Controllers/tpscontroller.h"

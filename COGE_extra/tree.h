@@ -2,23 +2,25 @@ class GAME_Tree
 {
 private:
 	GLS::Drawer* wood;
-public:
 	GLS::Drawer* grass;
+public:
+	GLS::Object3D object;
 	GAME_Tree(GLS::MODEL TreeGrass_model, GLS::MODEL TreeWood_model)
 	{
 		//grass = new GLS::Drawer(sizeof(grass_vertices),grass_vertices, sizeof(grass_indices),grass_indices,GL_STATIC_DRAW);
 		grass = new GLS::Drawer(TreeGrass_model,GL_STATIC_DRAW);
-		grass->scale = glm::vec3(2.0f,2.0f,2.0f);
 
 		//wood = new GLS::Drawer(sizeof(wood_vertices),wood_vertices, sizeof(wood_indices),wood_indices,GL_STATIC_DRAW);
 		wood = new GLS::Drawer(TreeWood_model,GL_STATIC_DRAW);
+
+		object.scale = glm::vec3(2.0f,2.0f,2.0f);
 	}
 
-	void draw(GLS::ShaderProgram shader,unsigned int xyzEffect[3])
+	void draw(COGE::Shader3D shader,unsigned int xyzEffect[3])
 	{
-		grass->modelRefresh();
-
-		grass->shader_model(shader.model);
+		object.modelRefresh();
+		object.shader_model(shader.model);
+		
 		glUniform3f(xyzEffect[0], 0.0f, 0.5f, 0.0f);
 		glUniform3f(xyzEffect[1], 0.0f, 1.0f, 0.0f);
 		glUniform3f(xyzEffect[2], 0.0f, 0.5f, 0.0f);
@@ -48,13 +50,13 @@ public:
 			for(unsigned int idy = 0;idy<sqrt(tree_count);idy++)
 			{
 				GAME_Tree tree(TreeGrass_model,TreeWood_model);
-				tree.grass->position = glm::vec3(startX + idx*dx,terrain.getHeight(startX + idx*dx,startY+idy*dy),startY+idy*dy);
+				tree.object.position = glm::vec3(startX + idx*dx,terrain.getHeight(startX + idx*dx,startY+idy*dy),startY+idy*dy);
 				trees.push_back(tree);
 			}
 		}
 	}
 
-	void draw(GLS::ShaderProgram shader, unsigned int xyzEffect[3])
+	void draw(COGE::Shader3D shader, unsigned int xyzEffect[3])
 	{
 		for(unsigned int i = 0;i<trees.size();i++)
 		{

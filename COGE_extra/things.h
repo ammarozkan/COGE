@@ -6,6 +6,7 @@ struct GAME_Physics
 class GAME_Thing
 {
 public:
+	GLS::Object3D object;
 	GLS::Drawer* drawer;
 	glm::vec3 speed = glm::vec3(0.0f);
 	GAME_Physics* world_physics;
@@ -18,14 +19,14 @@ public:
 
 	void update(float deltaTime,float min_height)
 	{
-		drawer->position += speed*deltaTime;
+		object.position += speed*deltaTime;
 		speed+=world_physics->gravity*deltaTime;
-		if(drawer->position.y < min_height)
+		if(object.position.y < min_height)
 		{
-			drawer->position.y = min_height;
-			speed -= deltaTime*speed;
+			object.position.y = min_height;
+			if(deltaTime < 1.0) speed -= deltaTime*speed;
 			if(speed.y < 0.0f) speed.y = 0.0f;
-			drawer->position.y = min_height;
+			object.position.y = min_height;
 		}
 	}
 };

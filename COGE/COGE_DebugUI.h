@@ -25,18 +25,13 @@ namespace COGE
 			text_drawer = nullptr;
 		}
 
-		void draw_test(GLS::ShaderProgram UIShader)
+		void draw_test(ShaderUI UIShader_uniforms)
 		{
 			glm::vec2 text_size = glm::vec2(size*characters*0.4f,size);
+			UIShader_uniforms.setPos(position);
+			UIShader_uniforms.setSize(text_size);
+			glUniformMatrix4fv(UIShader_uniforms.transform, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
 			text_drawer->drawElements();
-			glUniformMatrix4fv(UIShader.model, 1, GL_FALSE, glm::value_ptr(glm::scale(glm::mat4(1.0f),glm::vec3(size*0.4,size,1.0f))));
-			glm::mat4 view = glm::translate(glm::mat4(1.0f),glm::vec3(position.x+text_size.x/2,position.y+text_size.y/2,0.0f));
-			glUniformMatrix4fv(UIShader.view, 1, GL_FALSE, glm::value_ptr(view));
 		}
-	};
-
-	class DUI
-	{
-
 	};
 }

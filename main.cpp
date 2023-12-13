@@ -32,11 +32,9 @@ int main()
 
 #ifdef COGE_PACK
 	COGE::DataPacker test_pack("packages/early_package");
-	test_pack.addShaderData_fromFile("testshader", "testshader.glsl");
-	test_pack.addShaderData_fromFile("defaultshader", "defaultshader.glsl");
 	test_pack.addShaderData_fromFile("generalshader", "generalshader.glsl");
 	test_pack.addShaderData_fromFile("uishader", "uishader.glsl");
-	test_pack.addShaderData_fromFile("test_loading_shader", "test_loading_shader.glsl");
+	test_pack.addShaderData_fromFile("watershader", "watershader.glsl");
 	test_pack.addModelData("model_plane", COGE::MODEL_Plane());
 	test_pack.addModelData("model_tree_grass", COGE::MODEL_TreeGrass());
 	test_pack.addModelData("model_tree_wood", COGE::MODEL_TreeWood());

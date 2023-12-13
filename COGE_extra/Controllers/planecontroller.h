@@ -6,15 +6,15 @@ struct GAME_PlaneController
 
 glm::vec3 PlaneController_getRequiredCamera(GAME_Thing* object)
 {
-	return object->drawer->position - (object->drawer->getFront())*4.0f;
+	return object->object.position - (object->object.getFront())*4.0f;
 }
 
 glm::vec3 PlaneController_getCameraPos(float deltaTime,glm::vec3 cameraPos,float cam_distance,GAME_Thing* object,void* data)
 {
 	GAME_PlaneController *PC = ((GAME_PlaneController*)data);
 	glm::vec3 alpha_result = cameraPos + (PlaneController_getRequiredCamera(object)-cameraPos)*deltaTime;
-	glm::vec3 distance = alpha_result - object->drawer->position;
-	return object->drawer->position + glm::normalize(distance)*cam_distance;
+	glm::vec3 distance = alpha_result - object->object.position;
+	return object->object.position + glm::normalize(distance)*cam_distance;
 }
 
 void PlaneController_Update(float deltaTime, GAME_Thing* object, void* data,GLFWwindow*window)
@@ -31,20 +31,20 @@ void PlaneController_Update(float deltaTime, GAME_Thing* object, void* data,GLFW
 void PlaneController_W(float deltaTime,GAME_Thing* object,void* data)
 {
 	GAME_PlaneController *PC = ((GAME_PlaneController*)data);
-	if(PC->lShift) object->speed += object->drawer->getFront() * deltaTime * 10.0f;
-	else object->speed += object->drawer->getFront() * deltaTime * 1.0f;
+	if(PC->lShift) object->speed += object->object.getFront() * deltaTime * 10.0f;
+	else object->speed += object->object.getFront() * deltaTime * 1.0f;
 }
 
 void PlaneController_S(float deltaTime,GAME_Thing* object,void* data)
 {
-	object->speed -= object->drawer->getFront() * deltaTime * 1.0f;
+	object->speed -= object->object.getFront() * deltaTime * 1.0f;
 }
 
 void PlaneController_R(float deltaTime,GAME_Thing* object,void* data)
 {
 	GAME_PlaneController *PC = ((GAME_PlaneController*)data);
-	object->drawer->rotateRelative(glm::vec3(1.0, 0.0f, 0.0f),glm::radians(+PC->turning_deegree));
-	glm::vec4 rotV = object->drawer->rotation * glm::vec4(1.0f,0.0f,0.0f,1.0f);
+	object->object.rotateRelative(glm::vec3(1.0, 0.0f, 0.0f),glm::radians(+PC->turning_deegree));
+	glm::vec4 rotV = object->object.rotation * glm::vec4(1.0f,0.0f,0.0f,1.0f);
 	glm::vec4 n_spd = glm::rotate(glm::mat4(1.0f),glm::radians(+PC->turning_deegree),glm::vec3(rotV.x,rotV.y,rotV.z)) * glm::vec4(object->speed.x,object->speed.y,object->speed.z,1.0f);
 	object->speed = glm::vec3(n_spd.x,n_spd.y,n_spd.z);
 }
@@ -52,8 +52,8 @@ void PlaneController_R(float deltaTime,GAME_Thing* object,void* data)
 void PlaneController_F(float deltaTime,GAME_Thing* object,void* data)
 {
 	GAME_PlaneController *PC = ((GAME_PlaneController*)data);
-	object->drawer->rotateRelative(glm::vec3(1.0, 0.0f, 0.0f),glm::radians(-PC->turning_deegree));
-	glm::vec4 rotV = object->drawer->rotation * glm::vec4(1.0f,0.0f,0.0f,1.0f);
+	object->object.rotateRelative(glm::vec3(1.0, 0.0f, 0.0f),glm::radians(-PC->turning_deegree));
+	glm::vec4 rotV = object->object.rotation * glm::vec4(1.0f,0.0f,0.0f,1.0f);
 	glm::vec4 n_spd = glm::rotate(glm::mat4(1.0f),glm::radians(-PC->turning_deegree),glm::vec3(rotV.x,rotV.y,rotV.z)) * glm::vec4(object->speed.x,object->speed.y,object->speed.z,1.0f);
 	object->speed = glm::vec3(n_spd.x,n_spd.y,n_spd.z);
 }
@@ -61,13 +61,13 @@ void PlaneController_F(float deltaTime,GAME_Thing* object,void* data)
 void PlaneController_A(float deltaTime,GAME_Thing* object,void* data)
 {
 	GAME_PlaneController *PC = ((GAME_PlaneController*)data);
-	object->drawer->rotateRelative(glm::vec3(0.0, 0.0f,-1.0f),glm::radians(+PC->turning_deegree/2));
+	object->object.rotateRelative(glm::vec3(0.0, 0.0f,-1.0f),glm::radians(+PC->turning_deegree/2));
 }
 
 void PlaneController_D(float deltaTime,GAME_Thing* object,void* data)
 {
 	GAME_PlaneController *PC = ((GAME_PlaneController*)data);
-	object->drawer->rotateRelative(glm::vec3(0.0, 0.0f,-1.0f),glm::radians(-PC->turning_deegree/2));
+	object->object.rotateRelative(glm::vec3(0.0, 0.0f,-1.0f),glm::radians(-PC->turning_deegree/2));
 }
 
 GAME_Controller get_PlaneController(GAME_PlaneController* planeController)

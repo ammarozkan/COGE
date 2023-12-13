@@ -29,8 +29,7 @@ namespace GLS
 		void info();
 		void linkcodes(const char*vertex_code,const char* fragment_code);
 	public:
-		unsigned int projection, view, model;
-		unsigned int colorConstant, colorConstant_effect;
+		ShaderProgram(ShaderText text);
 		ShaderProgram(Shader vertex, Shader fragment);
 		ShaderProgram(const char *vertex_code,const char *fragment_code);
 		ShaderProgram(const char* summed_shader_path);
@@ -41,8 +40,9 @@ namespace GLS
 	};
 
 	ShaderProgram* cooldefinitor(const char*vertex_code, const char *fragment_code);
-}
 
+	// struct Shader3D; // i'll have to use it somepoint
+}
 
 int gls_shader_success; char gls_shader_infoLog[512];
 
@@ -90,6 +90,18 @@ namespace GLS
 			glGetProgramInfoLog(id,512,NULL,gls_shader_infoLog);
 			WARN("ERROR::PROGRAM::LINKING::COMPILATION_FAILED\n" << gls_shader_infoLog);
 		}
+	}
+
+	ShaderProgram::ShaderProgram(ShaderText text)
+	{
+		id = glCreateProgram();
+		{
+			GLS::Shader vertex(text.vertex.c_str(),GL_VERTEX_SHADER);
+			GLS::Shader fragment(text.fragment.c_str(),GL_FRAGMENT_SHADER);
+			vertex.attachTo(id); fragment.attachTo(id);
+		}
+		glLinkProgram(id);
+		info();
 	}
 
 	void ShaderProgram::linkcodes(const char*vertex_code,const char* fragment_code)
@@ -142,16 +154,6 @@ namespace GLS
 	{
 		glUseProgram(id);
 	}
-
-
-	void ShaderProgram::initGenericUniforms()
-	{
-		view = UniformLocation("view");
-		model = UniformLocation("model");
-		projection = UniformLocation("projection");
-		colorConstant = UniformLocation("colorConstant");
-		colorConstant_effect = UniformLocation("colorConstant_effect");
-	}	
 
 	unsigned int ShaderProgram::UniformLocation(const char* name)
 	{

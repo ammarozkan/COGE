@@ -10,5 +10,6 @@ namespace GLS
 			this->vertice_size = vertice_size; this->indice_size = indice_size;
 		}
 		MODEL(){};
+		~MODEL(){};
 	};
 }

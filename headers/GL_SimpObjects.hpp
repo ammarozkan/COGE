@@ -11,7 +11,7 @@ namespace GLS
 	class VAO
 	{
 	private:
-		unsigned int id;
+		unsigned int id = 0;
 
 	public:
 		VAO();
@@ -25,7 +25,7 @@ namespace GLS
 	class VBO
 	{
 	private:
-		unsigned int id;
+		unsigned int id = 0;
 
 	public:
 		VBO();
@@ -40,7 +40,7 @@ namespace GLS
 	class EBO
 	{
 	private:
-		unsigned int id;
+		unsigned int id = 0;
 
 	public:
 		EBO();
@@ -55,31 +55,17 @@ namespace GLS
 
 namespace GLS
 {
-	VAO::VAO()
-	{
-		glGenVertexArrays(1, &id);
-	}
+	VAO::VAO() { glGenVertexArrays(1, &id); }
 
-	VAO::~VAO()
-	{
-		glDeleteVertexArrays(1, &id);
-	}
+	VAO::~VAO() { glDeleteVertexArrays(1, &id); }
 
-	void VAO::bind()
-	{
-		glBindVertexArray(id);
-	}
+	void VAO::bind() { glBindVertexArray(id); }
 
 
 
 	VBO::VBO() { glGenBuffers(1,&id); }
-
 	VBO::~VBO() { glDeleteBuffers(1,&id); }
-
-	void VBO::bind()
-	{
-		glBindBuffer(GL_ARRAY_BUFFER,id);
-	}
+	void VBO::bind() { glBindBuffer(GL_ARRAY_BUFFER,id); }
 
 	void VBO::data(unsigned int size, float*d, GLenum operation)
 	{
@@ -89,10 +75,7 @@ namespace GLS
 
 
 
-	EBO::EBO()
-	{
-		glGenBuffers(1,&id);
-	}
+	EBO::EBO() { glGenBuffers(1,&id); }
 
 	void EBO::bind()
 	{
