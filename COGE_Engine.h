@@ -12,6 +12,8 @@
 // #define COGE_DATA_EXTENSION -> with this, data extension can be changed
 // #define COGE_MERGE_STATIC_MODELS -> library not defaultly includes COGE_Models.h file. Only includes when that thing is defined.
 
+#define COGE_VERSION_NAME "In the Beginning"
+
 #ifndef COGE_VULKAN
 #include <GL/glew.h>
 #else
@@ -110,6 +112,5 @@ void print(float t)
 
 #include "COGE/COGE_DebugUI.h"
 #include "COGE/COGE_Data.h"
-
 
 #include "COGE/COGE_Core.h"
