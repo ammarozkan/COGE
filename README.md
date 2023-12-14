@@ -8,4 +8,4 @@ Critical Oriented Game Engine
 - [x] Terrain generator.
 - [x] Really basic water. Really basic. Don't expect too much.
 - [x] Thirdperson Controller
-- [x] Plane Controller
+- [x] Flight Controller
