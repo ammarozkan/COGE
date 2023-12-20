@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 3.27)
 project(TryingOpenGL VERSION 2.0)
 
-add_executable(GRANDE main.cpp)
+add_executable(GRANDE main.cpp
+                    src/COGE/drawers_low/GL_Draw.cpp
+                    src/COGE/drawers_low/GL_SimpObjects.cpp
+                    src/COGE/drawers_low/GL_LeCamera.cpp
+                    src/COGE/drawers_low/GL_Models.cpp
+                    src/COGE/drawers_low/GL_Shaders.cpp)
 configure_file(cmakeincluder.h.in cmakeincluder.h)
 
 target_include_directories(GRANDE PUBLIC "${PROJECT_BINARY_DIR}")
+target_include_directories(GRANDE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)

@@ -5,7 +5,7 @@
 #define WIDTH 1280
 #define HEIGHT 720
 
-//#define COGE_DONT_FILE_LOG
+#define COGE_DONT_FILE_LOG
 //#define COGE_EDITOR
 #define COGE_EXTREME_LOG
 
@@ -16,7 +16,7 @@
 #define COGE_MERGE_STATIC_MODELS
 #endif
 
-#include "COGE_Engine.h"
+#include <COGE/Engine.h>
 
 int main()
 {
