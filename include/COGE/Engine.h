@@ -39,28 +39,13 @@
 #include <COGE/drawers_low/GL_Models.hpp>
 #include <COGE/drawers_low/GL_Draw.hpp>
 
-void print(glm::vec3 t)
-{
-	std::cout << "X:" << t.x << " Y:" << t.y << " Z:" << t.z << std::endl;
-}
-
-void print(glm::vec4 t)
-{
-	std::cout << "X:" << t.x << " Y:" << t.y << " Z:" << t.z << " W:" << t.w << std::endl;
-}
-
-void print(float t)
-{
-	std::cout << "Float:" << t << std::endl;
-}
+void print(glm::vec3 t);
+void print(glm::vec4 t);
+void print(float t);
 
 #include <COGE/core/StandardShaders.h>
 
-#include <COGE/objects/generators.h>
-#include <COGE/objects/water.h>
-#include <COGE/objects/terrain.h>
-#include <COGE/objects/tree.h>
-#include <COGE/objects/things.h>
+
 
 #include <COGE/controller/controller.h>
 

@@ -113,6 +113,50 @@ namespace COGE
 
 		return model;
 	}
+
+	GLS::MODEL MODEL_Cube()
+	{
+		GLS::MODEL model;
+
+		float cube_vertices[] = 
+		{
+			// front
+		    -1.0f,	-1.0f,	 1.0f,
+		     1.0f,	-1.0f,	 1.0f,
+		     1.0f,	 1.0f,	 1.0f,
+		    -1.0f,	 1.0f,	 1.0f,
+		    // back
+		    -1.0f,	-1.0f,	-1.0f,
+		     1.0f,	-1.0f,	-1.0f,
+		     1.0f,	 1.0f,	-1.0f,
+		    -1.0f,	 1.0f,	-1.0f
+		};
+
+		unsigned int cube_indices[] =
+		{
+			0,1,2,
+			3,4,5,
+
+			2,4,5,
+			2,4,1,
+
+			0,1,4,
+			0,3,4,
+
+			0,2,5,
+			0,3,5
+		};
+
+		model.vertice_size = sizeof(cube_vertices);
+		model.indice_size = sizeof(cube_indices);
+		model.vertices = (float*)malloc(model.vertice_size);
+		model.indices = (unsigned int*)malloc(model.indice_size);
+
+		memcpy(model.vertices, cube_vertices, model.vertice_size);
+		memcpy(model.indices, cube_indices, model.indice_size);
+
+		return model;
+	}
 }
 
 #endif

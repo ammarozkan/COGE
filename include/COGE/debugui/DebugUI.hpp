@@ -3,10 +3,15 @@
 #ifndef COGE_DEBUGUI_HPP
 #define COGE_DEBUGUI_HPP
 
-#include <COGE/debugui/COGE_DebugUI_Letters.hpp>
+#include <iostream>
+
+//#include <COGE/debugui/COGE_DebugUI_Letters.hpp>
+#include <COGE/drawers_low/GL_Draw.hpp>
+#include <COGE/core/StandardShaders.h>
 
 namespace COGE
 {
+	GLS::Drawer* get_A();
 	class Text
 	{
 	private:
@@ -37,6 +42,7 @@ namespace COGE
 			text_drawer->drawElements();
 		}
 	};
+
 }
 
 #endif

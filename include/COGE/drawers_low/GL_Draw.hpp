@@ -2,6 +2,9 @@
 #define COGE_GL_DRAW_HPP
 
 #include <vector>
+#include <COGE/drawers_low/GL_SimpObjects.hpp>
+#include <COGE/drawers_low/GL_Models.hpp>
+#include <COGE/Mathematics.h>
 
 namespace GLS
 {

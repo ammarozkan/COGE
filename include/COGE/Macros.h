@@ -1,13 +1,19 @@
+#include <iostream>
+#include <fstream>
+
 #ifndef COGE_MACROS_H
 #define COGE_MACROS_H
+
+#define WIDTH 1280
+#define HEIGHT 720
 
 #ifndef COGE_DONT_FILE_LOG
 #ifndef COGE_LOG_FILE_PATH
 #define COGE_LOG_FILE_PATH "coge_log.txt"
 #endif
-std::ofstream log_file(COGE_LOG_FILE_PATH);
-#define FLOG(x) log_file << x << std::endl;
-#define FLOGnl(x) log_file << x;
+extern std::ofstream log_file;
+#define FLOG(x) log_file << x << std::endl
+#define FLOGnl(x) log_file << x
 #else
 #define FLOG(x)
 #define FLOGnl(x)
@@ -45,6 +51,5 @@ std::ofstream log_file(COGE_LOG_FILE_PATH);
 #ifndef COGE_DESTROY_QUICK_UNDERSTAND
 #define QUICK_UNDERSTAND LOG("---------------------------------Yay.-------------------------------------");
 #endif
-
 
 #endif

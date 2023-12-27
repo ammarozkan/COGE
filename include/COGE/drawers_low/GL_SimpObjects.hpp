@@ -1,6 +1,8 @@
 #ifndef COGE_GL_SIMPOBJECTS_HPP
 #define COGE_GL_SIMPOBJECTS_HPP
 
+#include <GL/glew.h>
+
 namespace GLS
 {
 

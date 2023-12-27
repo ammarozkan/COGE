@@ -1,6 +1,8 @@
 #ifndef COGE_TERRAIN_H
 #define COGE_TERRAIN_H
 
+#include <COGE/Macros.h>
+
 class GAME_Terrain
 {
 private:

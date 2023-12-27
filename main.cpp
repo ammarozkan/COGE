@@ -2,9 +2,6 @@
 
 /// spell coge like koj. prend le mat comme en francais
 
-#define WIDTH 1280
-#define HEIGHT 720
-
 #define COGE_DONT_FILE_LOG
 //#define COGE_EDITOR
 #define COGE_EXTREME_LOG
@@ -32,12 +29,14 @@ int main()
 
 #ifdef COGE_PACK
 	COGE::DataPacker test_pack("packages/early_package");
-	test_pack.addShaderData_fromFile("generalshader", "generalshader.glsl");
-	test_pack.addShaderData_fromFile("uishader", "uishader.glsl");
-	test_pack.addShaderData_fromFile("watershader", "watershader.glsl");
+	test_pack.addShaderData_fromFile("generalshader", "assets/generalshader.glsl");
+	test_pack.addShaderData_fromFile("uishader", "assets/uishader.glsl");
+	test_pack.addShaderData_fromFile("watershader", "assets/watershader.glsl");
+	test_pack.addShaderData_fromFile("skyboxshader", "assets/skyboxshader.glsl");
 	test_pack.addModelData("model_plane", COGE::MODEL_Plane());
 	test_pack.addModelData("model_tree_grass", COGE::MODEL_TreeGrass());
 	test_pack.addModelData("model_tree_wood", COGE::MODEL_TreeWood());
+	test_pack.addModelData("model_basic_cube", COGE::MODEL_Cube());
 	test_pack.pack();
 #endif
 #ifdef COGE_UNPACK
