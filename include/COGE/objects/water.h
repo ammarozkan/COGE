@@ -22,7 +22,7 @@ struct GAME_Water
 	GAME_Water() {}
 	~GAME_Water(){ delete drawer;delete shader; }
 
-	void init_drawer(GLS::MODEL model,GLS::ShaderText sh) 
+	void init_drawer(GLS::MODEL& model,GLS::ShaderText sh) 
 	{ 
 		drawer = new GLS::Drawer(model,GL_STATIC_DRAW);
 		shader = new GLS::ShaderProgram(sh.vertex.c_str(),sh.fragment.c_str());

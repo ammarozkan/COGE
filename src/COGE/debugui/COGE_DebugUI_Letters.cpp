@@ -1,4 +1,5 @@
 #include <COGE/debugui/DebugUI.hpp>
+#include <COGE/Macros.h>
 
 namespace COGE
 {

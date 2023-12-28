@@ -11,9 +11,9 @@ void COGE::Engine::Work()
 	}
 
 	float printTimer = 0.0f;
-	LOG("GOING TO LOOP!");
 	inStart();
 	preTime = glfwGetTime();
+	LOG("GOING TO LOOP!");
 	while(!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -24,7 +24,7 @@ void COGE::Engine::Work()
 		inLoop(deltaTime);
 
 		//Draw_low();
-		//glClear(GL_DEPTH_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT);
 		Draw_Skybox();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		Draw();
@@ -118,6 +118,7 @@ void COGE::Engine::inLoop(float deltaTime)
 	camera.position = controller.getCameraPos(deltaTime, camera.position,1.0f);
 	camera.updateByTarget(controller.getCameraTarget(deltaTime));
 
+	sunDirection = glm::vec3(0.0f,cos(glfwGetTime()/10),sin(glfwGetTime()/10));
 }
 
 void COGE::Engine::Draw_low()
@@ -135,6 +136,8 @@ void COGE::Engine::Draw()
 	generalShader->use();
 	glUniformMatrix4fv(generalShader_uniforms.view, 1, GL_FALSE, glm::value_ptr(camera.getView()));
 	glUniformMatrix4fv(generalShader_uniforms.projection, 1, GL_FALSE, glm::value_ptr(full_projection));
+	glUniform3f(generalShader_uniforms.sunDirection, sunDirection.x,sunDirection.y,sunDirection.z);
+
 
 	glUniform3f(xyzEffects[0], 0.0f, 0.0f, 0.0f);
 	glUniform3f(xyzEffects[1], 0.0f, 0.0f, 0.0f);
@@ -154,7 +157,7 @@ void COGE::Engine::Draw()
 	}
 
 	terrain.draw(generalShader_uniforms,xyzEffects);
-	for(unsigned int i = 0;i<forests.size();i++) forests[i].draw(generalShader_uniforms,xyzEffects);
+	for(unsigned int i = 0;i<forests.size();i++) forests[i]->draw(generalShader_uniforms,xyzEffects);
 
 	water.shader->use();
 	water.refresh_projection(full_projection,camera.getView());
@@ -173,6 +176,7 @@ void COGE::Engine::Draw_Skybox()
 	glm::mat4 nonPositionalCameraView = glm::mat4(glm::mat3(camera.getView()));
 	glUniformMatrix4fv(skyView, 1, GL_FALSE, glm::value_ptr(nonPositionalCameraView));
 	glUniformMatrix4fv(skyProj, 1, GL_FALSE, glm::value_ptr(full_projection));
+	glUniform3f(skySunDirection, sunDirection.x,sunDirection.y,sunDirection.z);
 	anBox->drawElements();
 }
 

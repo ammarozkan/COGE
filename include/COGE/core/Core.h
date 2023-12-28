@@ -48,7 +48,7 @@ namespace COGE
 
 		GAME_Water water;
 
-		std::vector<GAME_Forest> forests;
+		std::vector<GAME_Forest*> forests;
 
 		// Controllers
 		bool pr = false;
@@ -60,6 +60,9 @@ namespace COGE
 		std::vector<GAME_Thing> objects;
 		GLS::MODEL* planeModel; // SHOULD PUT THESE THINGS TO A UNORDERED MAP OR SMTH LIKE THAT FOR MODEL LOADING AND REQUIREMENTS... OR
 		// JUST IMPLEMENT MODELFINDER CLASS OR SMTH LTHAT
+		GLS::MODEL *model_TreeGrass;
+		GLS::MODEL *model_TreeWood;
+		GLS::MODEL *model_Flight;
 
 		// Uniforms
 		unsigned int xyzEffects[3]; // complete package of the locations
@@ -74,8 +77,9 @@ namespace COGE
 
 
 		// skybox here for now.
-		GLS::ShaderProgram* skyboxShader; unsigned int skyView, skyProj;
+		GLS::ShaderProgram* skyboxShader; unsigned int skyView, skyProj, skySunDirection;
 		GLS::Drawer *anBox;
+		glm::vec3 sunDirection;
 	public:
 		static GLFWwindow* init_gl();
 

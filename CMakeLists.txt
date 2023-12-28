@@ -14,6 +14,7 @@ add_executable(GRANDE main.cpp
                     src/COGE/core/Initializers.cpp
                     src/COGE/core/StandardShaders.cpp
                     src/COGE/core/Core.cpp
+                    src/COGE/core/CoreDestructor.cpp
                     src/COGE/objects/generators.cpp
                     src/COGE/objects/things.cpp
                     src/COGE/datas/DataLoader.cpp

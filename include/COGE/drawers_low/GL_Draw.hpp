@@ -33,12 +33,12 @@ namespace GLS
 		void object_init(unsigned int vs, float*v, unsigned int is, unsigned int*i, unsigned int t);
 	public:
 		Drawer();
-		Drawer(MODEL model, unsigned int draw_type);
-		Drawer(MODEL model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem);
+		Drawer(MODEL& model, unsigned int draw_type);
+		Drawer(MODEL& model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem);
 		~Drawer();
 
-		void init_buffers(MODEL model, unsigned int draw_type);
-		void init_buffers(MODEL model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem);
+		void init_buffers(MODEL& model, unsigned int draw_type);
+		void init_buffers(MODEL& model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem);
 		
 		void drawTriangle();
 		void drawElements();

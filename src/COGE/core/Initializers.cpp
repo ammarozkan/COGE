@@ -39,6 +39,7 @@ void COGE::Engine::init_shaders()
 	skyboxShader->use();
 	skyView = skyboxShader->UniformLocation("view");
 	skyProj = skyboxShader->UniformLocation("projection");
+	skySunDirection = skyboxShader->UniformLocation("sunDirection");
 }
 
 void COGE::Engine::init_projection()
@@ -78,10 +79,9 @@ void COGE::Engine::init_terrain()
 void COGE::Engine::init_objects()
 {
 	LOG("OBJECT(MODEL) INITIALIZATION");
-	GLS::MODEL* plane = data_loader.load_model("model_plane");
-	planes.push_back(GAME_Thing(new GLS::Drawer(*plane, GL_STATIC_DRAW), &world));
-	planes.push_back(GAME_Thing(new GLS::Drawer(*plane, GL_STATIC_DRAW), &world));
-	planes.push_back(GAME_Thing(new GLS::Drawer(*plane, GL_STATIC_DRAW), &world));
+	planes.push_back(GAME_Thing(new GLS::Drawer(*model_Flight, GL_STATIC_DRAW), &world));
+	planes.push_back(GAME_Thing(new GLS::Drawer(*model_Flight, GL_STATIC_DRAW), &world));
+	planes.push_back(GAME_Thing(new GLS::Drawer(*model_Flight, GL_STATIC_DRAW), &world));
 	//delete plane;
 
 	LOG("terrain drawer initializing");
@@ -92,13 +92,13 @@ void COGE::Engine::init_objects()
 	water.init_drawer(*planeModel,data_loader.read_shader("watershader"));
 
 	LOG("forest initializion");
-	GLS::MODEL* model_TreeGrass = data_loader.load_model("model_tree_grass");
-	GLS::MODEL* model_TreeWood = data_loader.load_model("model_tree_wood");
-	forests.push_back(GAME_Forest(1000, 100.0f, 100.0f, 650.0f, 0.0f, terrain,*model_TreeGrass,*model_TreeWood));
+	forests.push_back(new GAME_Forest(1000, 100.0f, 100.0f, 650.0f, 0.0f, terrain,*model_TreeGrass,*model_TreeWood));
 	objects.push_back(GAME_Thing(new GLS::Drawer(*model_TreeWood, GL_STATIC_DRAW), &world));
 
 	GLS::MODEL* boxModel = data_loader.load_model("model_basic_cube");
-	anBox = new GLS::Drawer(*boxModel,GL_STATIC_DRAW);
+	//anBox = new GLS::Drawer(*boxModel,GL_STATIC_DRAW); //idk why box model is not working for it
+	anBox = new GLS::Drawer(*model_Flight,GL_STATIC_DRAW);
+	delete boxModel;
 }
 
 void COGE::Engine::init_UI()
@@ -113,6 +113,9 @@ void COGE::Engine::init_UI()
 
 void COGE::Engine::threaded_init()
 {
+	model_TreeGrass = data_loader.load_model("model_tree_grass");
+	model_TreeWood = data_loader.load_model("model_tree_wood");
+	model_Flight = data_loader.load_model("model_plane");
 	init_terrain();
 	init_projection();
 	loading = false;
@@ -127,6 +130,7 @@ void COGE::Engine::mainThread_init()
 
 bool COGE::Engine::init()
 {
+	LOG("FILE INIT.");
 	if(!init_files())
 	{
 		WARN("SOMETHING WRONG WITH THE FILES.");
@@ -146,6 +150,8 @@ bool COGE::Engine::init()
 COGE::Engine::Engine(GLFWwindow* window) :
 	DebugText("A",25.0f)
 {
+
+	LOG("ENGINE INIT.");
 	if(window == nullptr)
 	{
 		WARN("OPENGL INITIALIZATION FAILED.");
@@ -156,8 +162,6 @@ COGE::Engine::Engine(GLFWwindow* window) :
 	if(!init()) {WARN("INITIALIZATION IS NOT COMPLETED.");}
 	else init_complete = true;
 }
-
-COGE::Engine::~Engine() {}
 
 void COGE::Engine::initializing()
 {

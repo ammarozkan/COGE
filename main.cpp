@@ -21,6 +21,7 @@ int main()
 #ifndef COGE_PACK
 #ifndef COGE_UNPACK
 	GLFWwindow* window = COGE::Engine::init_gl(); // BOOOM opengl
+	LOG("ENGINE CREATION.");
 	COGE::Engine engine(window); 
 	engine.Work(); // hmmm
 #endif

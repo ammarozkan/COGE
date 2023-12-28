@@ -31,7 +31,7 @@ COGE::DataFile::DataFile(std::string file_path) :
 	this->file_id = stat_file_id;
 }
 
-void COGE::DataFile::scan(std::vector<Reference> &model_references, std::vector<Reference> &shader_references)
+void COGE::DataFile::scan(std::unordered_map<std::string,Reference> &model_references, std::unordered_map<std::string,Reference> &shader_references)
 {
 	in_file.read(reinterpret_cast<char*>(&generic_type),sizeof(generic_type));
 	in_file.read(reinterpret_cast<char*>(&data_count),sizeof(data_count));
@@ -46,12 +46,14 @@ void COGE::DataFile::scan(std::vector<Reference> &model_references, std::vector<
 		name_cstr[name_size] = '\0';
 		in_file.read(reinterpret_cast<char*>(&data_size),sizeof(data_size));
 
-		Reference ref = {file_id, in_file.tellg(), data_size, std::string(name_cstr)};
-		if(data_type == DATA_TYPE::COGE_MODEL) model_references.push_back(ref);
-		else if(data_type == DATA_TYPE::COGE_SHADER) shader_references.push_back(ref);
+		std::string ref_name(name_cstr);
+		Reference ref = {file_id, in_file.tellg(), data_size};
+
+		if(data_type == DATA_TYPE::COGE_MODEL) model_references[ref_name] = ref;
+		else if(data_type == DATA_TYPE::COGE_SHADER) shader_references[ref_name] = ref; //shader_references.push_back(ref);
 		else WARN("READER READED AN UNDEFINED DATA_TYPE=" << data_type);
 
-		LOG("<REFERENCE:'" << ref.name << "' \t type:" << typeToString(data_type) << "\t in " << ref.where << ">");
+		LOG("<REFERENCE:'" << ref_name << "' \t type:" << typeToString(data_type) << "\t in " << ref.where << ">");
 
 		in_file.seekg(in_file.tellg() + data_size);
 	}
@@ -85,9 +87,10 @@ void COGE::DataLoader::addFile(std::string data_path)
 GLS::MODEL* COGE::DataLoader::load_model(std::string name)
 {
 	char* data = nullptr;
-	for(unsigned int i = 0;i<model_references.size();i++) 
-		if(model_references[i].name == name) 
-			data = (char*)files[model_references[i].file_id].read(model_references[i]);
+	if(model_references.find(name) == model_references.end()) return new GLS::MODEL(0,nullptr,0,nullptr);
+	Reference& ref = model_references[name];
+	data = (char*)files[ref.file_id].read(ref);
+
 	if (data == nullptr)
 	{
 		WARN("SEARCHED DATA REFERENCE IS NOT FOUNDED IN MODELS:'" << name << "'");
@@ -100,15 +103,6 @@ GLS::MODEL* COGE::DataLoader::load_model(std::string name)
 	unsigned int *indice_size = (unsigned int*)(data+sizeof(unsigned int)+*vertice_size);
 	unsigned int* indices = &indice_size[1];
 
-	/*GLS::MODEL model;
-	model.vertice_size = *vertice_size; model.indice_size = *indice_size;
-	model.vertices = (float*)malloc(model.vertice_size);
-	model.indices = (unsigned int*)malloc(model.indice_size);
-
-	memcpy(model.vertices, vertices, model.vertice_size);
-	memcpy(model.indices, indices, model.indice_size);*/
-
-
 	GLS::MODEL* model = new GLS::MODEL(*vertice_size,vertices,*indice_size,indices);
 	free(data);
 	LOG("MODEL LOADED '" << name << "' vertice_size:" << model->vertice_size << " indice_size:" << model->indice_size);
@@ -119,20 +113,15 @@ GLS::ShaderText COGE::DataLoader::read_shader(std::string name)
 {
 	char* data = nullptr;
 	_FILESIZE size = 0;
-	for(unsigned int i = 0;i<shader_references.size();i++) 
-	{
-		if(!name.compare(shader_references[i].name)) 
-		{
-			data = (char*)files[shader_references[i].file_id].read(shader_references[i]);
-			size = shader_references[i].size;
-			break;
-		}
-	}
-	if (data == nullptr)
+
+	if(shader_references.find(name) == shader_references.end())
 	{
 		WARN("SEARCHED DATA REFERENCE IS NOT FOUNDED IN SHADERS:'" << name << "'");
 		return {"",""};
 	}
+	Reference& ref = shader_references[name];
+	data = (char*)files[ref.file_id].read(ref);
+	size = ref.size;
 
 	LOG("REFERENCE FOUND.");
 	char* start = &data[0];

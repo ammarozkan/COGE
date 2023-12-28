@@ -19,7 +19,7 @@ namespace COGE
 		unsigned int file_id;
 		long int where;
 		_FILESIZE size;
-		std::string name;
+		//std::string name;
 	};
 
 	class DataFile
@@ -31,7 +31,7 @@ namespace COGE
 	public:
 		DataFile(std::string file_path);
 
-		void scan(std::vector<Reference> &model_references, std::vector<Reference> &shader_references);
+		void scan(std::unordered_map<std::string,Reference> &model_references, std::unordered_map<std::string,Reference> &shader_references);
 		void* read(Reference ref);
 	};
 
@@ -39,7 +39,7 @@ namespace COGE
 	{
 	private:
 		std::vector<DataFile> files;
-		std::vector<Reference> model_references, shader_references;
+		std::unordered_map<std::string,Reference> model_references, shader_references;
 	public:
 		DataLoader(std::vector<std::string> file_paths = std::vector<std::string>());
 		void addFile(std::string file_path);
@@ -51,12 +51,9 @@ namespace COGE
 	{
 	private:
 		std::vector<std::string> next_models, next_shaders, next_textures;
-		std::unordered_map<std::string,GLS::MODEL> models;
+		std::unordered_map<std::string,GLS::MODEL*> models;
 		std::thread thrd;
 
-		void addModelToQueue(std::string name);
-		void addShaderToQueue(std::string name);
-		void addTextureToQueue(std::string name);
 	public:
 		SimulDataLoader(DataLoader& dataLoader);
 		void requestTexture(std::string name, DATA_TYPE type);

@@ -70,12 +70,12 @@ namespace GLS
 		if(vao!=nullptr) { delete vao; delete vbo; delete ebo; }
 	}
 
-	Drawer::Drawer(MODEL model, unsigned int draw_type) { init_buffers(model,draw_type); }
+	Drawer::Drawer(MODEL& model, unsigned int draw_type) { init_buffers(model,draw_type); }
 
-	Drawer::Drawer(MODEL model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem=0) 
+	Drawer::Drawer(MODEL& model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem=0) 
 	{ init_buffers(model,draw_type,each_size_size,each_size,sumofthem); }
 
-	void Drawer::init_buffers(MODEL model, unsigned int draw_type)
+	void Drawer::init_buffers(MODEL& model, unsigned int draw_type)
 	{
 		object_init(model.vertice_size,model.vertices,model.indice_size,model.indices,draw_type);
 
@@ -85,7 +85,7 @@ namespace GLS
 		indices = model.indice_size/sizeof(unsigned int);
 	}
 
-	void Drawer::init_buffers(MODEL model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem=0)
+	void Drawer::init_buffers(MODEL& model, unsigned int draw_type, unsigned int each_size_size, unsigned int* each_size, unsigned int sumofthem=0)
 	{
 		object_init(model.vertice_size,model.vertices,model.indice_size,model.indices,draw_type);
 

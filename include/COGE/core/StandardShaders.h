@@ -18,6 +18,7 @@ namespace COGE
 		unsigned int colorConstant, colorConstant_effect;
 		unsigned int xEffect, yEffect, zEffect;
 		unsigned int cameraPosition;
+		unsigned int sunDirection;
 
 		void init(GLS::ShaderProgram sp);
 	};

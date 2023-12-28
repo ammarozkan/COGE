@@ -12,6 +12,7 @@ void COGE::Shader3D::init(GLS::ShaderProgram sp)
 	yEffect = sp.UniformLocation("yEffect");
 	zEffect = sp.UniformLocation("zEffect");
 	cameraPosition = sp.UniformLocation("cameraPosition");
+	sunDirection = sp.UniformLocation("sunDirection");
 }
 
 void COGE::ShaderUI::init(GLS::ShaderProgram sp)

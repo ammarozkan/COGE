@@ -33,13 +33,26 @@ in vec3 vertexPosition;
 
 uniform vec4 cpuColor;
 uniform vec3 cameraPosition;
+uniform vec3 sunDirection;
 
 out vec4 FragColor;
 
+vec4 getSunColor()
+{
+    vec3 worldPlane = normalize(vec3(sunDirection.x,0,sunDirection.z));
+    float nearToWorldPlane = length(cross(worldPlane,sunDirection));
+	return vec4(255,235*nearToWorldPlane,200*nearToWorldPlane,255)/255;
+}
+
+float getSunPower()
+{
+    return pow((dot(sunDirection,vec3(0,1,0))+1)/2,1);
+}
+
 void main()
 {
-	vec3 sunDirection = normalize(vec3(1.0,0.5,1.0));
-    vec4 sunColor = vec4(255,235,200,255)/255;
+    vec4 sunColor = getSunColor();
+	float sunPower = 1;
 	vec4 object_color = vertexColor*((cpuColor+vec4(1))/2);
 
 
@@ -48,6 +61,6 @@ void main()
 	vec3 reflect_dir = normalize(reflect(sunDirection,normal));
 	float luma = max(dot(normal,sunDirection),0.0);
 
-	vec4 came_light = (sunColor*0.5 + luma*sunColor)/(1.5);
+	vec4 came_light = (vec4(0.1,0.1,0.2,1.0)+ 0.4*sunColor*getSunPower() + 0.6*getSunPower()*sunPower*luma*sunColor);
 	FragColor = object_color * came_light;
 }
