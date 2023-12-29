@@ -7,7 +7,7 @@
 
 //#include <COGE/debugui/COGE_DebugUI_Letters.hpp>
 #include <COGE/drawers_low/GL_Draw.hpp>
-#include <COGE/core/StandardShaders.h>
+#include <COGE/renderer/StandardShaders.h>
 
 namespace COGE
 {

@@ -4,6 +4,7 @@
 #include <vector>
 #include <COGE/drawers_low/GL_SimpObjects.hpp>
 #include <COGE/drawers_low/GL_Models.hpp>
+#include <COGE/drawers_low/GL_LeCamera.hpp>
 #include <COGE/Mathematics.h>
 
 namespace GLS

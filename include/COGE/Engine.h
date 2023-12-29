@@ -43,8 +43,6 @@ void print(glm::vec3 t);
 void print(glm::vec4 t);
 void print(float t);
 
-#include <COGE/core/StandardShaders.h>
-
 
 
 #include <COGE/controller/controller.h>

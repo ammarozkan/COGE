@@ -3,6 +3,7 @@
 
 #include <COGE/Macros.h>
 
+// will be rewritten in renderer segment
 class GAME_Terrain
 {
 private:

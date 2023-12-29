@@ -118,46 +118,30 @@ void COGE::Engine::inLoop(float deltaTime)
 	camera.position = controller.getCameraPos(deltaTime, camera.position,1.0f);
 	camera.updateByTarget(controller.getCameraTarget(deltaTime));
 
-	sunDirection = glm::vec3(0.0f,cos(glfwGetTime()/10),sin(glfwGetTime()/10));
+	sky->tick();
 }
 
 void COGE::Engine::Draw_low()
 {
-	generalShader->use();
-	glUniformMatrix4fv(generalShader_uniforms.projection, 1, GL_FALSE, glm::value_ptr(far_projection));
-	low_terrain.draw(generalShader_uniforms,xyzEffects);
+	generalRenderer.changeProjection(far_projection);
+	low_terrain.draw(generalRenderer.getUniforms(),xyzEffects);
 }
 
 
 
 void COGE::Engine::Draw()
 {
-	glUniform3f(generalShader_uniforms.cameraPosition,camera.position.x,camera.position.y,camera.position.z);
-	generalShader->use();
-	glUniformMatrix4fv(generalShader_uniforms.view, 1, GL_FALSE, glm::value_ptr(camera.getView()));
-	glUniformMatrix4fv(generalShader_uniforms.projection, 1, GL_FALSE, glm::value_ptr(full_projection));
-	glUniform3f(generalShader_uniforms.sunDirection, sunDirection.x,sunDirection.y,sunDirection.z);
-
+	generalRenderer.use(full_projection);
 
 	glUniform3f(xyzEffects[0], 0.0f, 0.0f, 0.0f);
 	glUniform3f(xyzEffects[1], 0.0f, 0.0f, 0.0f);
 	glUniform3f(xyzEffects[2], 1.0f, 0.0f, 0.0f);
-	for(unsigned int i = 0; i<planes.size();i++)
-	{
-		planes[i].object.modelRefresh();
-		planes[i].object.shader_model(generalShader_uniforms.model);
-		planes[i].drawer->drawElements();
-	}
+	for(unsigned int i = 0; i<planes.size();i++) generalRenderer.draw(planes[i].drawer,planes[i].object);
 
-	for(unsigned int i = 0; i<objects.size();i++)
-	{
-		objects[i].object.modelRefresh();
-		objects[i].object.shader_model(generalShader_uniforms.model);
-		objects[i].drawer->drawElements();
-	}
+	for(unsigned int i = 0; i<objects.size();i++) generalRenderer.draw(objects[i].drawer,objects[i].object);
 
-	terrain.draw(generalShader_uniforms,xyzEffects);
-	for(unsigned int i = 0;i<forests.size();i++) forests[i]->draw(generalShader_uniforms,xyzEffects);
+	terrain.draw(generalRenderer.getUniforms(),xyzEffects);
+	for(unsigned int i = 0;i<forests.size();i++) forests[i]->draw(generalRenderer.getUniforms(),xyzEffects);
 
 	water.shader->use();
 	water.refresh_projection(full_projection,camera.getView());
@@ -172,12 +156,8 @@ void COGE::Engine::Draw_UI()
 
 void COGE::Engine::Draw_Skybox()
 {
-	skyboxShader->use();
-	glm::mat4 nonPositionalCameraView = glm::mat4(glm::mat3(camera.getView()));
-	glUniformMatrix4fv(skyView, 1, GL_FALSE, glm::value_ptr(nonPositionalCameraView));
-	glUniformMatrix4fv(skyProj, 1, GL_FALSE, glm::value_ptr(full_projection));
-	glUniform3f(skySunDirection, sunDirection.x,sunDirection.y,sunDirection.z);
-	anBox->drawElements();
+	sky->draw(camera,full_projection);
+
 }
 
 void COGE::Engine::OncePrint(float deltaTime)

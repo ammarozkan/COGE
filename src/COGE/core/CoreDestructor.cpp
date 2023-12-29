@@ -8,8 +8,8 @@ COGE::Engine::~Engine()
 	free(planeModel->indices);
 	delete planeModel;*/
 
-	delete generalShader;
 	delete UIShader;
 	delete planeModel;
 	for(unsigned int i = 0;i<forests.size();i++) delete forests[i];
+	delete sky;
 }

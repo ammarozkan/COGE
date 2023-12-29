@@ -2,6 +2,7 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 out vec3 vertexPosition;
+out vec3 vertexModelPosition;
 out vec4 vertexColor;
 
 uniform mat4 model;
@@ -17,6 +18,7 @@ uniform float colorConstant_effect=0;
 
 void main()
 {
+	vertexModelPosition = aPos.xyz;
 	gl_Position = projection* view * model * vec4(aPos.xyz,1.0);
 	//vertexColor = vec4((aPos.xyz+1.0)/2,1.0);
 	vec3 c_p = xEffect*aPos.x + yEffect*aPos.y + zEffect*aPos.z;
@@ -30,6 +32,7 @@ void main()
 
 in vec4 vertexColor;
 in vec3 vertexPosition;
+in vec3 vertexModelPosition;
 
 uniform vec4 cpuColor;
 uniform vec3 cameraPosition;
@@ -48,6 +51,19 @@ float getSunPower()
 {
     return pow((dot(sunDirection,vec3(0,1,0))+1)/2,1);
 }
+vec2 rotate(vec2 inp,float angle)
+{
+	return vec2(-sin(angle)*inp.y+cos(angle)*inp.x, sin(angle)*inp.x+cos(angle)*inp.y);
+}
+vec3 normalMapRotate(vec3 inp)
+{
+	// these inputs will be retrieved from normal map kinda thing.
+	float angle1 = sin(vertexModelPosition.x*50);
+	float angle2 = cos(vertexModelPosition.z*20);
+	vec2 one = rotate(inp.xy,angle1);
+	vec2 two = rotate(vec2(one.y,inp.z),angle2);
+	return vec3(one.x,two.xy);
+}
 
 void main()
 {
@@ -57,10 +73,11 @@ void main()
 
 
 	vec3 normal = normalize(cross(dFdx(vertexPosition), dFdy(vertexPosition)));
+	normal = normalMapRotate(normal);
 	vec3 look_dir = normalize(cameraPosition - vertexPosition);
 	vec3 reflect_dir = normalize(reflect(sunDirection,normal));
 	float luma = max(dot(normal,sunDirection),0.0);
 
-	vec4 came_light = (vec4(0.1,0.1,0.2,1.0)+ 0.4*sunColor*getSunPower() + 0.6*getSunPower()*sunPower*luma*sunColor);
+	vec4 came_light = (vec4(0.1,0.1,0.2,1.0)+ 0.0*sunColor*getSunPower() + 0.6*getSunPower()*sunPower*luma*sunColor);
 	FragColor = object_color * came_light;
 }

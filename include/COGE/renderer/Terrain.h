@@ -1,0 +1,8 @@
+
+namespace COGE
+{
+	class TerrainRenderer
+	{
+
+	};
+}

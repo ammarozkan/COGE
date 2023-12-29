@@ -11,7 +11,6 @@
 
 #include <COGE/drawers_low/GL_LeCamera.hpp>
 
-#include <COGE/core/StandardShaders.h>
 #include <COGE/datas/DataLoader.hpp>
 #include <COGE/debugui/DebugUI.hpp>
 #include <COGE/objects/things.h>
@@ -22,6 +21,10 @@
 #include <COGE/objects/terrain.h>
 #include <COGE/objects/tree.h>
 //#include <COGE/objects/things.h>
+
+#include <COGE/renderer/StandardShaders.h>
+#include <COGE/renderer/Sky.h>
+#include <COGE/renderer/General.h>
 
 namespace COGE
 {
@@ -35,7 +38,7 @@ namespace COGE
 		DataLoader data_loader;
 
 		// Drawing Necessary
-		GLS::ShaderProgram* generalShader; Shader3D generalShader_uniforms;
+		GeneralRenderer generalRenderer;
 		GLS::Camera camera; glm::mat4 full_projection, far_projection;
 
 		// UI
@@ -45,8 +48,10 @@ namespace COGE
 		// World
 		GAME_Physics world;
 		GAME_Terrain terrain, low_terrain;
+		Sky* sky;
 
 		GAME_Water water;
+
 
 		std::vector<GAME_Forest*> forests;
 
@@ -75,11 +80,6 @@ namespace COGE
 		// Public variables
 		float preTime, deltaTime;
 
-
-		// skybox here for now.
-		GLS::ShaderProgram* skyboxShader; unsigned int skyView, skyProj, skySunDirection;
-		GLS::Drawer *anBox;
-		glm::vec3 sunDirection;
 	public:
 		static GLFWwindow* init_gl();
 
@@ -89,6 +89,7 @@ namespace COGE
 		void init_UI();
 		void init_shaders();
 		void init_projection();
+		void init_renderers();
 		void init_terrain();
 		void init_objects();
 		void init_controllers();

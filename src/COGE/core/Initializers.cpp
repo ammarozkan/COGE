@@ -28,18 +28,10 @@ void COGE::Engine::init_shaders()
 {
 	LOG("SHADER INITIALIZATION");
 	
-	generalShader = new GLS::ShaderProgram(data_loader.read_shader("generalshader"));
-	generalShader->use();
-	generalShader_uniforms.init(*generalShader);
-	xyzEffects[0] = generalShader_uniforms.xEffect;
-	xyzEffects[1] = generalShader_uniforms.yEffect;
-	xyzEffects[2] = generalShader_uniforms.zEffect;
-
-	skyboxShader = new GLS::ShaderProgram(data_loader.read_shader("skyboxshader"));
-	skyboxShader->use();
-	skyView = skyboxShader->UniformLocation("view");
-	skyProj = skyboxShader->UniformLocation("projection");
-	skySunDirection = skyboxShader->UniformLocation("sunDirection");
+	generalRenderer.initShader(data_loader.read_shader("generalshader"));
+	xyzEffects[0] = generalRenderer.getUniforms().xEffect;
+	xyzEffects[1] = generalRenderer.getUniforms().yEffect;
+	xyzEffects[2] = generalRenderer.getUniforms().zEffect;
 }
 
 void COGE::Engine::init_projection()
@@ -49,6 +41,14 @@ void COGE::Engine::init_projection()
 	camera.updateByTarget(glm::vec3(0.0f));
 	full_projection = glm::perspective(glm::radians(45.0f),(float)WIDTH/(float)HEIGHT,0.1f,100000.0f);
 	far_projection = glm::perspective(glm::radians(45.0f),(float)WIDTH/(float)HEIGHT,500.0f,100000.0f);
+	generalRenderer.setCamera(&camera);
+}
+
+void COGE::Engine::init_renderers()
+{
+	LOG("RENDERER INITIALIZATION.");
+	sky = new Sky();
+	generalRenderer.setSky(sky);
 }
 
 void COGE::Engine::init_controllers()
@@ -97,7 +97,7 @@ void COGE::Engine::init_objects()
 
 	GLS::MODEL* boxModel = data_loader.load_model("model_basic_cube");
 	//anBox = new GLS::Drawer(*boxModel,GL_STATIC_DRAW); //idk why box model is not working for it
-	anBox = new GLS::Drawer(*model_Flight,GL_STATIC_DRAW);
+	sky->init_drawer(*model_Flight,data_loader.read_shader("skyboxshader"));
 	delete boxModel;
 }
 
@@ -124,6 +124,7 @@ void COGE::Engine::threaded_init()
 void COGE::Engine::mainThread_init()
 {
 	init_shaders(); // That thing is can only be working on the main thread.
+	init_renderers();
 	init_objects();
 	init_controllers();
 }
