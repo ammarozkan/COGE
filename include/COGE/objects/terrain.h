@@ -18,13 +18,13 @@ private:
 	}
 	
 public:
-	GLS::Drawer* terrain_drawer; GLS::Object3D terrain_object;
+	GLS::VideoModel* terrain_drawer; GLS::Object3D terrain_object;
 
 	GLS::MODEL* terrain_model;
 
 	GAME_Terrain()
 	{
-		terrain_drawer = new GLS::Drawer();
+		terrain_drawer = new GLS::VideoModel();
 		terrain_model = new GLS::MODEL;
 	}
 

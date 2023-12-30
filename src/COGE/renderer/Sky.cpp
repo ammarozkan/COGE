@@ -20,7 +20,7 @@ namespace COGE
 
 	void Sky::init_drawer(GLS::MODEL& model,GLS::ShaderText shader_text)
 	{
-		anBox = new GLS::Drawer(model,GL_STATIC_DRAW);
+		anBox = new GLS::VideoModel(model,GL_STATIC_DRAW);
 
 		skyboxShader = new GLS::ShaderProgram(shader_text);
 		skyboxShader->use();

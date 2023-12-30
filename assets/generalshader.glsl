@@ -43,7 +43,7 @@ out vec4 FragColor;
 vec4 getSunColor()
 {
     vec3 worldPlane = normalize(vec3(sunDirection.x,0,sunDirection.z));
-    float nearToWorldPlane = length(cross(worldPlane,sunDirection));
+    float nearToWorldPlane = pow(length(cross(worldPlane,sunDirection)),1);
 	return vec4(255,235*nearToWorldPlane,200*nearToWorldPlane,255)/255;
 }
 
@@ -51,6 +51,7 @@ float getSunPower()
 {
     return pow((dot(sunDirection,vec3(0,1,0))+1)/2,1);
 }
+
 vec2 rotate(vec2 inp,float angle)
 {
 	return vec2(-sin(angle)*inp.y+cos(angle)*inp.x, sin(angle)*inp.x+cos(angle)*inp.y);
@@ -70,6 +71,7 @@ void main()
     vec4 sunColor = getSunColor();
 	float sunPower = 1;
 	vec4 object_color = vertexColor*((cpuColor+vec4(1))/2);
+	object_color = vec4(1);
 
 
 	vec3 normal = normalize(cross(dFdx(vertexPosition), dFdy(vertexPosition)));

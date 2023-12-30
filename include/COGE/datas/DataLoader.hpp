@@ -7,8 +7,9 @@
 #include <thread>
 
 #include <COGE/datas/Datas.hpp>
-#include <COGE/drawers_low/GL_Draw.hpp>
+#include <COGE/drawers_low/GL_Models.hpp>
 #include <COGE/drawers_low/GL_Shaders.hpp>
+#include <COGE/drawers_low/GL_Textures.hpp>
 
 namespace COGE
 {
@@ -20,6 +21,25 @@ namespace COGE
 		long int where;
 		_FILESIZE size;
 		//std::string name;
+	};
+
+	class FreeFetcher
+	{
+	private:
+		char* first;
+		char* pointer;
+	public:
+		FreeFetcher(void* pointer);
+		
+		template<typename T>
+		T* fetch(unsigned int count = 1)
+		{
+			T* result = (T*)pointer;
+			pointer+=sizeof(T)*count;
+			return result;
+		}
+
+		unsigned int wh();
 	};
 
 	class DataFile
@@ -45,6 +65,7 @@ namespace COGE
 		void addFile(std::string file_path);
 		GLS::MODEL* load_model(std::string name);
 		GLS::ShaderText read_shader(std::string name);
+		GLS::TextureData load_texture(std::string name);
 	};
 
 	class SimulDataLoader

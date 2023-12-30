@@ -37,7 +37,6 @@
 #include <COGE/drawers_low/GL_Shaders.hpp>
 #include <COGE/drawers_low/GL_LeCamera.hpp>
 #include <COGE/drawers_low/GL_Models.hpp>
-#include <COGE/drawers_low/GL_Draw.hpp>
 
 void print(glm::vec3 t);
 void print(glm::vec4 t);

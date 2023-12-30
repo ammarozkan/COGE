@@ -4,17 +4,17 @@
 class GAME_Tree
 {
 private:
-	GLS::Drawer* wood;
-	GLS::Drawer* grass;
+	GLS::VideoModel* wood;
+	GLS::VideoModel* grass;
 public:
 	GLS::Object3D object;
 	GAME_Tree(GLS::MODEL& TreeGrass_model, GLS::MODEL& TreeWood_model)
 	{
-		//grass = new GLS::Drawer(sizeof(grass_vertices),grass_vertices, sizeof(grass_indices),grass_indices,GL_STATIC_DRAW);
-		grass = new GLS::Drawer(TreeGrass_model,GL_STATIC_DRAW);
+		//grass = new GLS::VideoModel(sizeof(grass_vertices),grass_vertices, sizeof(grass_indices),grass_indices,GL_STATIC_DRAW);
+		grass = new GLS::VideoModel(TreeGrass_model,GL_STATIC_DRAW);
 
-		//wood = new GLS::Drawer(sizeof(wood_vertices),wood_vertices, sizeof(wood_indices),wood_indices,GL_STATIC_DRAW);
-		wood = new GLS::Drawer(TreeWood_model,GL_STATIC_DRAW);
+		//wood = new GLS::VideoModel(sizeof(wood_vertices),wood_vertices, sizeof(wood_indices),wood_indices,GL_STATIC_DRAW);
+		wood = new GLS::VideoModel(TreeWood_model,GL_STATIC_DRAW);
 
 		object.scale = glm::vec3(2.0f,2.0f,2.0f);
 	}

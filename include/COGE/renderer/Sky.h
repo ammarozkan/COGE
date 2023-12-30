@@ -5,7 +5,7 @@
 
 #include <COGE/drawers_low/GL_Shaders.hpp>
 #include <COGE/drawers_low/GL_LeCamera.hpp>
-#include <COGE/drawers_low/GL_Draw.hpp>
+#include <COGE/drawers_low/GL_VideoModel.hpp>
 
 namespace COGE
 {
@@ -13,7 +13,7 @@ namespace COGE
 	{
 	private:
 		GLS::ShaderProgram* skyboxShader; unsigned int skyView, skyProj, skySunDirection;
-		GLS::Drawer *anBox;
+		GLS::VideoModel *anBox;
 		float cycle_speed_multiplier;
 	public:
 		glm::vec3 sunDirection;

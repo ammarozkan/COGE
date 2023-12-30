@@ -1,0 +1,24 @@
+load file/package text.fbx
+loads anything by looking into the file ending thing.
+
+open [projectfiledest]
+opens a project file.
+
+save
+saves project file. if not a name is specified, will give a error.
+automatically done every 30s. If a name is not specified yet, will save to
+AUTOMATICALLYSAVE93689240247.COGEPRJ or somekinda file like this, autosave name
+would randomly selected every session.
+
+saveas projectfilename.COGEPRJ
+saves to a new file.
+
+WHILE SAVING
+saving system not directly writes to destination.COGEPRJ
+firstly writes to destination_prewrite.COGEPRJ and then writes
+to destination. By this, if a electric cut or something like this
+happens, file or old file will be still alive.
+
+print project/preview/loads
+use model/shader/material [name]
+pack [targetdestinationforpackages]

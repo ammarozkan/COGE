@@ -1,4 +1,5 @@
 
+#include <cstring>
 #include <COGE/Macros.h>
 #include <COGE/datas/DataPacker.hpp>
 

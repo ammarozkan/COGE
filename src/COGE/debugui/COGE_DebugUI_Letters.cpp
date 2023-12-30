@@ -3,7 +3,7 @@
 
 namespace COGE
 {
-	GLS::Drawer* get_A()
+	GLS::VideoModel* get_A()
 	{
 		float A_vertices[] = 
 		{
@@ -66,6 +66,6 @@ namespace COGE
 		
 		unsigned int each_size[] = {2};
 		GLS::MODEL letter_model(sizeof(A_vertices), A_vertices,sizeof(A_indices), A_indices);
-		return new GLS::Drawer(letter_model,GL_STATIC_DRAW, sizeof(each_size), each_size, 2);
+		return new GLS::VideoModel(letter_model,GL_STATIC_DRAW, sizeof(each_size), each_size, 2);
 	}
 }

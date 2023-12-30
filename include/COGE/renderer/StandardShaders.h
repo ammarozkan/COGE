@@ -8,7 +8,7 @@
 #include <COGE/drawers_low/GL_SimpObjects.hpp>
 #include <COGE/drawers_low/GL_Shaders.hpp>
 #include <COGE/drawers_low/GL_Models.hpp>
-#include <COGE/drawers_low/GL_Draw.hpp>
+#include <COGE/drawers_low/GL_VideoModel.hpp>
 
 namespace COGE
 {

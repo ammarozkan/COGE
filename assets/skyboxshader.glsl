@@ -28,7 +28,8 @@ uniform vec3 sunDirection;
 vec4 getSunColor()
 {
     vec3 worldPlane = normalize(vec3(sunDirection.x,0,sunDirection.z));
-    float nearToWorldPlane = length(cross(worldPlane,sunDirection));
+    //float nearToWorldPlane = min(pow(length(cross(worldPlane,sunDirection)),1)*2,1.0);
+    float nearToWorldPlane = min(length(cross(worldPlane,sunDirection))*2,1.0);
 	return vec4(255,235*nearToWorldPlane,200*nearToWorldPlane,255)/255;
 }
 
@@ -48,7 +49,7 @@ void main()
 
     float maxStrongium = 2;
     float sunInfiniteStronsium = sqrt(1/length(cross(drawDirection,sunDirection)));
-    float sunStronsium = (dot(drawDirection,sunDirection) + 1)/2;
+    float sunStronsium = pow((dot(drawDirection,sunDirection) + 1)/2,16);
 
     vec4 effectedColor = (skyColor + sunInfiniteStronsium*sunColor)/(1+sunInfiniteStronsium);
 

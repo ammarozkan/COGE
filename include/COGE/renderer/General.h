@@ -1,4 +1,7 @@
-#include <COGE/drawers_low/GL_Draw.hpp>
+#ifndef COGE_GENERAL_H
+#define COGE_GENERAL_H
+
+#include <COGE/drawers_low/GL_VideoModel.hpp>
 #include <COGE/drawers_low/GL_Shaders.hpp>
 #include <COGE/renderer/Sky.h>
 #include <COGE/Mathematics.h>
@@ -28,8 +31,10 @@ namespace COGE
 
 		void changeProjection(glm::mat4 proj);
 		void use(glm::mat4 proj);
-		void draw(GLS::Drawer* drawer, GLS::Object3D& object);
+		void draw(GLS::VideoModel* videomodel, GLS::Object3D& object);
 		//void setEverything(GLS::Camera*,Sky*);
 	};
 
 }
+
+#endif

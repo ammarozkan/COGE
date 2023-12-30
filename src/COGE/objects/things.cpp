@@ -1,8 +1,8 @@
 #include <COGE/objects/things.h>
 
-GAME_Thing::GAME_Thing(GLS::Drawer* drawer_ptr, GAME_Physics* world_physics)
+GAME_Thing::GAME_Thing(GLS::VideoModel* videomodel_ptr, GAME_Physics* world_physics)
 {
-	this->drawer = drawer_ptr;
+	this->videomodel = videomodel_ptr;
 	this->world_physics = world_physics;
 }
 

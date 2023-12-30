@@ -79,9 +79,9 @@ void COGE::Engine::init_terrain()
 void COGE::Engine::init_objects()
 {
 	LOG("OBJECT(MODEL) INITIALIZATION");
-	planes.push_back(GAME_Thing(new GLS::Drawer(*model_Flight, GL_STATIC_DRAW), &world));
-	planes.push_back(GAME_Thing(new GLS::Drawer(*model_Flight, GL_STATIC_DRAW), &world));
-	planes.push_back(GAME_Thing(new GLS::Drawer(*model_Flight, GL_STATIC_DRAW), &world));
+	planes.push_back(GAME_Thing(new GLS::VideoModel(*model_Flight, GL_STATIC_DRAW), &world));
+	planes.push_back(GAME_Thing(new GLS::VideoModel(*model_Flight, GL_STATIC_DRAW), &world));
+	planes.push_back(GAME_Thing(new GLS::VideoModel(*model_Flight, GL_STATIC_DRAW), &world));
 	//delete plane;
 
 	LOG("terrain drawer initializing");
@@ -93,10 +93,10 @@ void COGE::Engine::init_objects()
 
 	LOG("forest initializion");
 	forests.push_back(new GAME_Forest(1000, 100.0f, 100.0f, 650.0f, 0.0f, terrain,*model_TreeGrass,*model_TreeWood));
-	objects.push_back(GAME_Thing(new GLS::Drawer(*model_TreeWood, GL_STATIC_DRAW), &world));
+	objects.push_back(GAME_Thing(new GLS::VideoModel(*model_TreeWood, GL_STATIC_DRAW), &world));
 
 	GLS::MODEL* boxModel = data_loader.load_model("model_basic_cube");
-	//anBox = new GLS::Drawer(*boxModel,GL_STATIC_DRAW); //idk why box model is not working for it
+	//anBox = new GLS::VideoModel(*boxModel,GL_STATIC_DRAW); //idk why box model is not working for it
 	sky->init_drawer(*model_Flight,data_loader.read_shader("skyboxshader"));
 	delete boxModel;
 }
@@ -179,7 +179,7 @@ void COGE::Engine::initializing()
 
 	GLS::MODEL* triangle_model = new GLS::MODEL(sizeof(triangle_vertices),triangle_vertices,sizeof(triangle_indices),triangle_indices);
 
-	GLS::Drawer triangle_that_spins(*triangle_model,GL_STATIC_DRAW);
+	GLS::VideoModel triangle_that_spins(*triangle_model,GL_STATIC_DRAW);
 	LOG("LOADING SCREEN.");
 	glm::mat4 loading_transform = glm::mat4(1.0f);
 

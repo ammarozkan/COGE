@@ -3,7 +3,7 @@
 /// spell coge like koj. prend le mat comme en francais
 
 #define COGE_DONT_FILE_LOG
-//#define COGE_EDITOR
+#define COGE_EDITOR
 #define COGE_EXTREME_LOG
 
 //#define COGE_PACK
@@ -14,17 +14,21 @@
 #endif
 
 #include <COGE/Engine.h>
+#ifdef COGE_EDITOR
+#include <COGE/editor/Editor.h>
+#endif
 
 int main()
 {
 	ThatCode_print_version(); // works for cmake
-#ifndef COGE_PACK
-#ifndef COGE_UNPACK
 	GLFWwindow* window = COGE::Engine::init_gl(); // BOOOM opengl
+#ifndef COGE_EDITOR
 	LOG("ENGINE CREATION.");
 	COGE::Engine engine(window); 
 	engine.Work(); // hmmm
-#endif
+#else
+	COGE::Editor editor(window);
+	editor.Work();
 #endif
 	
 

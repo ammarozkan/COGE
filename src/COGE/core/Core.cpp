@@ -136,9 +136,9 @@ void COGE::Engine::Draw()
 	glUniform3f(xyzEffects[0], 0.0f, 0.0f, 0.0f);
 	glUniform3f(xyzEffects[1], 0.0f, 0.0f, 0.0f);
 	glUniform3f(xyzEffects[2], 1.0f, 0.0f, 0.0f);
-	for(unsigned int i = 0; i<planes.size();i++) generalRenderer.draw(planes[i].drawer,planes[i].object);
+	for(unsigned int i = 0; i<planes.size();i++) generalRenderer.draw(planes[i].videomodel,planes[i].object);
 
-	for(unsigned int i = 0; i<objects.size();i++) generalRenderer.draw(objects[i].drawer,objects[i].object);
+	for(unsigned int i = 0; i<objects.size();i++) generalRenderer.draw(objects[i].videomodel,objects[i].object);
 
 	terrain.draw(generalRenderer.getUniforms(),xyzEffects);
 	for(unsigned int i = 0;i<forests.size();i++) forests[i]->draw(generalRenderer.getUniforms(),xyzEffects);

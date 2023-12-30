@@ -17,14 +17,14 @@ struct ShaderWater
 
 struct GAME_Water
 {
-	GLS::Drawer *drawer; GLS::Object3D object; GLS::ShaderProgram* shader;
+	GLS::VideoModel *drawer; GLS::Object3D object; GLS::ShaderProgram* shader;
 	ShaderWater uniforms;
 	GAME_Water() {}
 	~GAME_Water(){ delete drawer;delete shader; }
 
 	void init_drawer(GLS::MODEL& model,GLS::ShaderText sh) 
 	{ 
-		drawer = new GLS::Drawer(model,GL_STATIC_DRAW);
+		drawer = new GLS::VideoModel(model,GL_STATIC_DRAW);
 		shader = new GLS::ShaderProgram(sh.vertex.c_str(),sh.fragment.c_str());
 		uniforms.init(*shader);
 	}

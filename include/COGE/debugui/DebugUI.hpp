@@ -6,31 +6,31 @@
 #include <iostream>
 
 //#include <COGE/debugui/COGE_DebugUI_Letters.hpp>
-#include <COGE/drawers_low/GL_Draw.hpp>
+#include <COGE/drawers_low/GL_VideoModel.hpp>
 #include <COGE/renderer/StandardShaders.h>
 
 namespace COGE
 {
-	GLS::Drawer* get_A();
+	GLS::VideoModel* get_A();
 	class Text
 	{
 	private:
-		GLS::Drawer* text_drawer;
+		GLS::VideoModel* text_videomodel;
 		float size;
 		unsigned int characters = 0;
 	public:
 		glm::vec2 position = glm::vec3(0.0f);
 		Text(std::string text, float size)
 		{
-			text_drawer = get_A();
+			text_videomodel = get_A();
 			this->size = size;
 			characters = text.size();
 		}
 
 		~Text()
 		{
-			delete text_drawer;
-			text_drawer = nullptr;
+			delete text_videomodel;
+			text_videomodel = nullptr;
 		}
 
 		void draw_test(ShaderUI UIShader_uniforms)
@@ -39,7 +39,7 @@ namespace COGE
 			UIShader_uniforms.setPos(position);
 			UIShader_uniforms.setSize(text_size);
 			glUniformMatrix4fv(UIShader_uniforms.transform, 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f)));
-			text_drawer->drawElements();
+			text_videomodel->drawElements();
 		}
 	};
 

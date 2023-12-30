@@ -48,11 +48,11 @@ namespace COGE
 		return uniforms;
 	}
 
-	void GeneralRenderer::draw(GLS::Drawer* drawer, GLS::Object3D& object)
+	void GeneralRenderer::draw(GLS::VideoModel* videomodel, GLS::Object3D& object)
 	{
 		object.modelRefresh();
 		object.shader_model(uniforms.model);
-		drawer->drawElements();
+		videomodel->drawElements();
 	}
 
 }

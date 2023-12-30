@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.27)
 project(TryingOpenGL VERSION 2.0)
 
 add_executable(GRANDE main.cpp
-                    src/COGE/drawers_low/GL_Draw.cpp
+                    src/COGE/drawers_low/GL_VideoModel.cpp
                     src/COGE/drawers_low/GL_SimpObjects.cpp
                     src/COGE/drawers_low/GL_LeCamera.cpp
                     src/COGE/drawers_low/GL_Models.cpp
                     src/COGE/drawers_low/GL_Shaders.cpp
+                    src/COGE/drawers_low/GL_Textures.cpp
                     src/COGE/controller/controller.cpp
                     src/COGE/controller/tpscontroller.cpp
                     src/COGE/controller/planecontroller.cpp
@@ -22,7 +23,8 @@ add_executable(GRANDE main.cpp
                     src/COGE/datas/DataLoader.cpp
                     src/COGE/datas/DataPacker.cpp
                     src/COGE/debugui/COGE_DebugUI_Letters.cpp
-                    src/COGE/Macros.cpp)
+                    src/COGE/Macros.cpp
+                    src/COGE/editor/Editor.cpp)
 configure_file(cmakeincluder.h.in cmakeincluder.h)
 
 target_include_directories(GRANDE PUBLIC "${PROJECT_BINARY_DIR}")

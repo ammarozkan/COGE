@@ -1,7 +1,18 @@
 
 #include <cstdlib>
+#include <cstring>
 #include <COGE/datas/DataLoader.hpp>
 #include <COGE/Macros.h>
+
+COGE::FreeFetcher::FreeFetcher(void* pointer)
+{
+	first = this->pointer = (char*)pointer;
+}
+
+unsigned int COGE::FreeFetcher::wh()
+{
+	return pointer-first;
+}
 
 std::string COGE::typeToString(DATA_TYPE data_type)
 {
@@ -96,12 +107,12 @@ GLS::MODEL* COGE::DataLoader::load_model(std::string name)
 		WARN("SEARCHED DATA REFERENCE IS NOT FOUNDED IN MODELS:'" << name << "'");
 		return new GLS::MODEL(0,nullptr,0,nullptr);
 	}
+	FreeFetcher ff((void*)data);
+	unsigned int *vertice_size = ff.fetch<unsigned int>();
+	float* vertices = ff.fetch<float>(*vertice_size/sizeof(float));
 
-	unsigned int *vertice_size = (unsigned int*)data;
-	float* vertices = (float*)(data+sizeof(unsigned int));
-
-	unsigned int *indice_size = (unsigned int*)(data+sizeof(unsigned int)+*vertice_size);
-	unsigned int* indices = &indice_size[1];
+	unsigned int *indice_size = ff.fetch<unsigned int>();
+	unsigned int* indices = ff.fetch<unsigned int>(*indice_size);
 
 	GLS::MODEL* model = new GLS::MODEL(*vertice_size,vertices,*indice_size,indices);
 	free(data);
@@ -144,5 +155,37 @@ GLS::ShaderText COGE::DataLoader::read_shader(std::string name)
 		}
 		else control+=*data;
 	}
+	free(start);
 	return {vertex_shader+'\0',fragment_shader+'\0'};
+}
+
+GLS::TextureData COGE::DataLoader::load_texture(std::string name)
+{
+	char* data = nullptr;
+	_FILESIZE size = 0;
+
+	if(shader_references.find(name) == shader_references.end())
+	{
+		WARN("SEARCHED DATA REFERENCE IS NOT FOUNDED IN SHADERS:'" << name << "'");
+		return {0,0,0,nullptr};
+	}
+	Reference& ref = shader_references[name];
+	data = (char*)files[ref.file_id].read(ref);
+	size = ref.size;
+	LOG("REFERENCE FOUND.");
+
+	FreeFetcher ff((void*)data);
+
+	int *width = ff.fetch<int>();
+	int *height = ff.fetch<int>();
+	unsigned int* type = ff.fetch<unsigned int>();
+	unsigned char* texture_data_pos = (unsigned char*)&data[ff.wh()];
+	GLS::TextureData tex_data;
+	tex_data.width = *width; tex_data.height = *height;
+	tex_data.type = *type;
+
+	tex_data.data = (unsigned char*)malloc(ref.size-ff.wh());
+	memcpy(tex_data.data, texture_data_pos, ref.size-ff.wh());
+	free(data);
+	return tex_data;
 }
