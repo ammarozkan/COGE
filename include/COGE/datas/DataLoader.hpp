@@ -89,6 +89,32 @@ namespace COGE
 
 		void begin(); // will create and start the thread.
 	};
+
+	struct DataObject 
+	{
+		void* object;
+		std::string name;
+	};
+
+	class DataManager
+	{
+	private:
+		std::vector<DataObject> onWork, onLoad;	// when something wanted to add to it, and there isn't place for new one
+												// this manager will destroy the last one.
+	public:
+		void addOnWork(DataObject dataObject);
+		void addOnLoad(DataObject dataObject);
+
+		void setReady(std::string name);	// Will load a data to onLoad. if data is already in onLoad, it
+											// will put this data to top. if it's already in onWork, not
+											// gonna touch.
+		DataObject requestData(std::string name); // will search onWork, and then onLoad list. If there's
+												  // nothing, it will load the data to onWork.
+												  // if the data is onLoad, then it will just
+												  // load that data to onWork without
+												  // using files.
+												  // in the result, we should be getted the data.
+	};
 }
 
 #endif

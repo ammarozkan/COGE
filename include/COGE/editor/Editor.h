@@ -1,3 +1,6 @@
+#ifndef COGE_EDITOR_H
+#define COGE_EDITOR_H
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <COGE/datas/DataLoader.hpp>
@@ -8,8 +11,11 @@
 #include <COGE/drawers_low/GL_Models.hpp>
 #include <COGE/drawers_low/GL_VideoModel.hpp>
 
+#include <COGE/editor/EditorCommandExecuter.h>
+
 namespace COGE
 {
+
 	class Editor
 	{
 	private:
@@ -21,6 +27,7 @@ namespace COGE
 		GLS::ShaderProgram *UIShader; ShaderUI UIShader_uniforms;
 		GLS::MODEL* model; GLS::VideoModel* target;
 		GLS::Object3D obj;
+		EditorCommandExecuter ECE;
 
 		float seeDistance = 5.0f;
 
@@ -34,6 +41,8 @@ namespace COGE
 		void ChangeModel(GLS::MODEL& model);
 		void ChangeModel(std::string name);
 
+		void HandleCommand(std::string);
+
 		void Controls(float deltaTime);
 
 		void OncePrint(float deltaTime);
@@ -42,5 +51,9 @@ namespace COGE
 		void Work();
 
 		~Editor();
+
+		friend class EditorCommandExecuter;
 	};
 }
+
+#endif

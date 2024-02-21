@@ -1,9 +1,10 @@
 #include <COGE/editor/Editor.h>
 #include <COGE/Macros.h>
 
+
 namespace COGE
 {
-	Editor::Editor(GLFWwindow* window)
+	Editor::Editor(GLFWwindow* window) : ECE(this)
 	{
 		if(window==nullptr)
 		{
@@ -45,6 +46,12 @@ namespace COGE
 		//LOG("TIME:"<<glfwGetTime());
 	}
 
+	void Editor::HandleCommand(std::string command)
+	{
+		LOG("COMMAND:"<<command);
+		ECE.handle(command);
+	}
+
 	void Editor::Controls(float deltaTime)
 	{
 		static bool pre_C = false;
@@ -52,10 +59,11 @@ namespace COGE
 		if(C != pre_C && C == true)
 		{
 			std::string input;
-			while(input!="PREVIEW")
+			while(true)
 			{
 				std::getline(std::cin, input);
-				LOG("INPUT:" << input);
+				if(input=="PREVIEW") break;
+				HandleCommand(input);
 			}
 		}
 		pre_C = C;
